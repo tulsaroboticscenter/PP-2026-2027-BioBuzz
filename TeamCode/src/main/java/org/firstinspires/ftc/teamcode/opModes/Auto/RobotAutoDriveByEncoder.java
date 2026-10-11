@@ -160,7 +160,7 @@ public class RobotAutoDriveByEncoder extends OpMode {
 
         switch (initState) {
             case GET_ALLIANCE:  // initial state waiting for driver to press A
-                telemetry.addLine("Press A to exit state");
+                telemetry.addLine("Select alliance");
                 if (gamepad1.aWasPressed()){
                     alliance = ALLIANCE.RED_ALLIANCE;
                     initState = InitState.GET_DELAY;
@@ -173,10 +173,11 @@ public class RobotAutoDriveByEncoder extends OpMode {
                 telemetry.addData("Wait seconds ", waitTime);
                 telemetry.addLine("DPAD up to increase");
                 telemetry.addLine("DPAD down to decrease");
-                if (gamepad1.dpad_up) {
+                telemetry.addLine("Press X to select wait");
+                if (gamepad1.dpadUpWasPressed()) {
                     waitTime++;
                 }
-                if (gamepad1.dpad_down && waitTime > 0) {
+                if (gamepad1.dpadDownWasPressed() && waitTime > 0) {
                     waitTime--;
                 }
                 if (gamepad1.xWasPressed()){
@@ -184,11 +185,12 @@ public class RobotAutoDriveByEncoder extends OpMode {
                 }
                 break;
             case CONFIRM_SELECTIONS:
+                telemetry.clear();
                 telemetry.addData("Alliance = ",alliance);
                 telemetry.addData("Wait seconds = ",waitTime);
                 telemetry.addLine("");
                 telemetry.addLine("Press Y to accept");
-                telemetry.addLine("Press X to reset");
+                telemetry.addLine("Press X to restart");
                 if (gamepad1.xWasPressed()){
                     initState = InitState.GET_ALLIANCE;
                 }
