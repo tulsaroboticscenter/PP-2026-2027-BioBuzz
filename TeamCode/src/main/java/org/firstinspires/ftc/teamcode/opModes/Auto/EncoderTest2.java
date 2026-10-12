@@ -30,8 +30,10 @@
 package org.firstinspires.ftc.teamcode.opModes.Auto;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -40,8 +42,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  *  */
 
-@Autonomous(name = "Encoder test", group = "Robot")
-//@Disabled
+@Autonomous(name = "Push Encoder test", group = "Robot")
+@Disabled
 public class EncoderTest2 extends OpMode {
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
@@ -51,7 +53,7 @@ public class EncoderTest2 extends OpMode {
     // This is gearing DOWN for less speed and more torque.
     // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
     static final double PI =3.1415;
-    static final double COUNTS_PER_MOTOR_REV = 28;    // eg: gobilda 5203 Motor Encoder
+    static final double COUNTS_PER_MOTOR_REV = 537.7;    // eg: gobilda 5203 Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 1.0;     // No External Gearing.
     static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -96,8 +98,8 @@ public class EncoderTest2 extends OpMode {
          */
         leftFrontDrive.setZeroPowerBehavior(BRAKE);
         rightFrontDrive.setZeroPowerBehavior(BRAKE);
-        leftBackDrive.setZeroPowerBehavior(BRAKE);
-        rightBackDrive.setZeroPowerBehavior(BRAKE);
+        leftBackDrive.setZeroPowerBehavior(FLOAT);
+        rightBackDrive.setZeroPowerBehavior(FLOAT);
 
 
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
