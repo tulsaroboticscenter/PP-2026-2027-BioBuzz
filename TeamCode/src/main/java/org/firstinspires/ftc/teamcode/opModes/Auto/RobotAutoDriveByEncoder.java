@@ -62,8 +62,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  *  */
 
-@Autonomous(name = "Auto Drive By Encoder", group = "Robot")
-//@Disabled
+@Autonomous(name = "Robot Auto Drive By Encoder", group = "Robot")
+@Disabled
 public class RobotAutoDriveByEncoder extends OpMode {
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
