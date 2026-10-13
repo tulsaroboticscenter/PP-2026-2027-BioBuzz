@@ -96,6 +96,7 @@ public class AutoDriveByEncoder extends OpMode {
     public final int LAUNCHER_TARGET_VELOCITY = 1250; //2678 RPM
     public final int LAUNCHER_MIN_VELOCITY = 1200; //2571 RPM
 
+    private int delaySeconds = 0;
     private ElapsedTime pathRuntime = new ElapsedTime();
     private ElapsedTime opmodeRuntime = new ElapsedTime();
     private ElapsedTime launcherTime = new ElapsedTime();
@@ -103,7 +104,7 @@ public class AutoDriveByEncoder extends OpMode {
 
     enum InitState {
         GET_ALLIANCE,
-        GET_DELAY,
+        GET_HIVE_POSITION,
         CONFIRM_SELECTIONS,
         FINISHED
     }
@@ -116,6 +117,26 @@ public class AutoDriveByEncoder extends OpMode {
     }
 
     ALLIANCE alliance = ALLIANCE.RED_ALLIANCE;
+    enum HIVE_POSITION {
+        HIVE_POSITION_UP,
+        HIVE_POSITION_DOWN
+
+    }
+
+    HIVE_POSITION hivePosition = HIVE_POSITION.HIVE_POSITION_UP;
+
+    enum PATHSTATE {
+        ORIENT_LAUNCHER,
+        DRIVE_TOWARD_HIVE,
+        WAIT_DELAY,
+        LAUNCH_POLLEN,
+        TURN_TOWARD_WALL,
+        DRIVE_TOWARD_WALL,
+        TURN_TOWARD_PARK,
+        DRIVE_TO_PARK,
+        FINISHED
+    }
+    PATHSTATE pathState = PATHSTATE.ORIENT_LAUNCHER;
 
     @Override
     public void init() {
@@ -155,39 +176,36 @@ public class AutoDriveByEncoder extends OpMode {
 
     // initialize loop to get match variables: delay seconds, alliance, etc
     public void init_loop(){
-        telemetry.addLine("Press A for Red alliance");
-        telemetry.addLine("Press B for Blue alliance");
 
         switch (initState) {
             case GET_ALLIANCE:  // initial state waiting for driver to press A
                 telemetry.addLine("Select alliance");
+                telemetry.addLine("Press A for Red alliance");
+                telemetry.addLine("Press B for Blue alliance");
                 if (gamepad1.aWasPressed()){
                     alliance = ALLIANCE.RED_ALLIANCE;
-                    initState = InitState.GET_DELAY;
+                    initState = InitState.GET_HIVE_POSITION;
                 } else if (gamepad1.bWasPressed()) {
                     alliance = ALLIANCE.BLUE_ALLIANCE;
-                    initState = InitState.GET_DELAY;
+                    initState = InitState.GET_HIVE_POSITION;
                 }
                 break;
-            case GET_DELAY:
-                telemetry.addData("Wait seconds ", waitTime);
-                telemetry.addLine("DPAD up to increase");
-                telemetry.addLine("DPAD down to decrease");
-                telemetry.addLine("Press Y to select wait");
-                if (gamepad1.dpadUpWasPressed()) {
-                    waitTime++;
-                }
-                if (gamepad1.dpadDownWasPressed() && waitTime > 0) {
-                    waitTime--;
-                }
-                if (gamepad1.yWasPressed()){
+            case GET_HIVE_POSITION:
+                telemetry.addLine("Select hive position");
+                telemetry.addLine("Press A for hive up");
+                telemetry.addLine("Press B for hive down");
+                if (gamepad1.aWasPressed()){
+                    hivePosition = HIVE_POSITION.HIVE_POSITION_UP;
+                    initState = InitState.CONFIRM_SELECTIONS;
+                } else if (gamepad1.bWasPressed()) {
+                    hivePosition = HIVE_POSITION.HIVE_POSITION_DOWN;
                     initState = InitState.CONFIRM_SELECTIONS;
                 }
                 break;
             case CONFIRM_SELECTIONS:
                 telemetry.clear();
                 telemetry.addData("Alliance = ",alliance);
-                telemetry.addData("Wait seconds = ",waitTime);
+                telemetry.addData("Hive position = ",hivePosition);
                 telemetry.addLine("");
                 telemetry.addLine("Press Y to accept");
                 telemetry.addLine("Press X to restart");
@@ -208,9 +226,10 @@ public class AutoDriveByEncoder extends OpMode {
     public void start(){
 
         opmodeRuntime.reset();
-
         launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
-
+        if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
+            waitTime = delaySeconds;
+        }
     }
 
 
