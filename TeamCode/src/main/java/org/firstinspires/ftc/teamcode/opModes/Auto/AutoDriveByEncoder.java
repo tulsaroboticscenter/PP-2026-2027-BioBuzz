@@ -29,8 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.opModes.Auto;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
-
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -66,7 +64,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  *  */
 
-@Autonomous(name = "Auto Drive By Encoder", group = "Robot")
+@Autonomous(name = "Auto Drive By Encoder", group = "Robot",preselectTeleOp = "BioBuzz Teleop")
 //@Disabled
 public class AutoDriveByEncoder extends OpMode {
 
@@ -96,11 +94,16 @@ public class AutoDriveByEncoder extends OpMode {
     public final int LAUNCHER_TARGET_VELOCITY = 1250; //2678 RPM
     public final int LAUNCHER_MIN_VELOCITY = 1200; //2571 RPM
 
-    private int delaySeconds = 5;
-    private double leftTurn90_left = -45;
-    private double leftTurn90_right = 45;
-    private double rightTurn90_left = 45;
-    private double rightTurn90_right = -45;
+    private int gameDelaySeconds = 5;
+    private double launchDelay = 5;
+    private double turn90 = 42;
+    private double distanceToHive = -10;
+    private double distanceToWall = 24;
+    private double distanceToPark = 24;
+    private double leftTurn90_left = -turn90;
+    private double leftTurn90_right = turn90;
+    private double rightTurn90_left = turn90;
+    private double rightTurn90_right = -turn90;
 
 
     private ElapsedTime pathRuntime = new ElapsedTime();
@@ -234,13 +237,14 @@ public class AutoDriveByEncoder extends OpMode {
         opmodeRuntime.reset();
         launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
         if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
-            waitTime = delaySeconds;
+            waitTime = gameDelaySeconds;
         }
     }
 
 
     @Override
     public void loop() {
+
 
         switch (pathState){
             case ORIENT_LAUNCHER:
@@ -254,24 +258,45 @@ public class AutoDriveByEncoder extends OpMode {
                 pathState = PATHSTATE.DRIVE_TOWARD_HIVE;
                 break;
             case DRIVE_TOWARD_HIVE:
+                encoderDrive(DRIVE_SPEED, distanceToHive, distanceToHive, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
                 pathState = PATHSTATE.WAIT_DELAY;
                 break;
             case WAIT_DELAY:
-                pathState = PATHSTATE.LAUNCH_POLLEN;
+                if (opmodeRuntime.seconds() > waitTime) {
+                    pathState = PATHSTATE.LAUNCH_POLLEN;
+                }
                 break;
             case LAUNCH_POLLEN:
+                launch();
                 pathState = PATHSTATE.TURN_TOWARD_WALL;
                 break;
             case TURN_TOWARD_WALL:
+                if ((alliance == ALLIANCE.RED_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP) ||
+                        (alliance == ALLIANCE.BLUE_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP))
+                {
+                    encoderDrive(TURN_SPEED, leftTurn90_left, leftTurn90_right, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                } else{
+                    encoderDrive(TURN_SPEED, rightTurn90_left, rightTurn90_right, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
+                }
+
                 pathState = PATHSTATE.DRIVE_TOWARD_WALL;
                 break;
             case DRIVE_TOWARD_WALL:
+                encoderDrive(DRIVE_SPEED, distanceToWall, distanceToWall, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
                 pathState = PATHSTATE.TURN_TOWARD_PARK;
                 break;
             case TURN_TOWARD_PARK:
+                if ((alliance == ALLIANCE.RED_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP) ||
+                        (alliance == ALLIANCE.BLUE_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP))
+                {
+                    encoderDrive(TURN_SPEED, leftTurn90_left, leftTurn90_right, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                } else{
+                    encoderDrive(TURN_SPEED, rightTurn90_left, rightTurn90_right, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
+                }
                 pathState = PATHSTATE.DRIVE_TOWARD_PARK;
                 break;
             case DRIVE_TOWARD_PARK:
+                encoderDrive(DRIVE_SPEED, distanceToPark, distanceToPark, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
                 pathState = PATHSTATE.FINISHED;
                 break;
             case FINISHED:
@@ -283,44 +308,8 @@ public class AutoDriveByEncoder extends OpMode {
 
 
 
-        if (opmodeRuntime.seconds() > waitTime && runningPath) {
-
-            telemetry.addLine("launching");
-            launch();
-
-            // Step through each leg of the path,
-            // Note: Reverse movement is obtained by setting a negative distance (not speed)
-
-
-
-            encoderDrive(DRIVE_SPEED, 24, 24, 5.0);  // S1: Forward 6 Inches with 5 Sec timeout
-
-            // red alliance turns right then left, blue turns left then right
-            if (alliance == ALLIANCE.RED_ALLIANCE) {
-                encoderDrive(TURN_SPEED, -40, 40, 4.0);  // S2: Turn Left 12 Inches with 4 Sec timeout
-            } else{
-                encoderDrive(TURN_SPEED, 40, -40, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-            }
-
-            encoderDrive(DRIVE_SPEED, 24, 24, 4.0);  // S3: forward 24 Inches with 4 Sec timeout
-
-     //       telemetry.addData("Path", "Complete");
-     //       telemetry.update();
-            runningPath = false;
-            //sleep(1000);  // pause to display final telemetry message.
-
-        }
-
     }
 
-    /*
-     *  Method to perform a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the OpMode running.
-     */
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
@@ -371,7 +360,7 @@ public class AutoDriveByEncoder extends OpMode {
     void launch() {
         launcherTime.reset();
 
-        while (launcherTime.seconds() < 3) {
+        while (launcherTime.seconds() < launchDelay) {
             if (launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
             windmillServo.setPower(1);
             //  intakePower += 0.5;
