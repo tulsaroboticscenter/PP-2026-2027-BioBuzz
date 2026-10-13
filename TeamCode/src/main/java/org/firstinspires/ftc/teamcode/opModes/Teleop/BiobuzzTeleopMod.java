@@ -75,7 +75,7 @@ public class BiobuzzTeleopMod extends OpMode {
         intake.init(hardwareMap);
         launcher.init(hardwareMap);
 
-        imu.resetYaw();
+//        imu.resetYaw();
 
         /*
          * Tell the driver that initialization is complete.
