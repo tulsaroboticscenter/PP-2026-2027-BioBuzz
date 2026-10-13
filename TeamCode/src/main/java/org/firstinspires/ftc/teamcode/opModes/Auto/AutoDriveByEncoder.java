@@ -96,7 +96,13 @@ public class AutoDriveByEncoder extends OpMode {
     public final int LAUNCHER_TARGET_VELOCITY = 1250; //2678 RPM
     public final int LAUNCHER_MIN_VELOCITY = 1200; //2571 RPM
 
-    private int delaySeconds = 0;
+    private int delaySeconds = 5;
+    private double leftTurn90_left = -45;
+    private double leftTurn90_right = 45;
+    private double rightTurn90_left = 45;
+    private double rightTurn90_right = -45;
+
+
     private ElapsedTime pathRuntime = new ElapsedTime();
     private ElapsedTime opmodeRuntime = new ElapsedTime();
     private ElapsedTime launcherTime = new ElapsedTime();
@@ -133,7 +139,7 @@ public class AutoDriveByEncoder extends OpMode {
         TURN_TOWARD_WALL,
         DRIVE_TOWARD_WALL,
         TURN_TOWARD_PARK,
-        DRIVE_TO_PARK,
+        DRIVE_TOWARD_PARK,
         FINISHED
     }
     PATHSTATE pathState = PATHSTATE.ORIENT_LAUNCHER;
@@ -236,6 +242,47 @@ public class AutoDriveByEncoder extends OpMode {
     @Override
     public void loop() {
 
+        switch (pathState){
+            case ORIENT_LAUNCHER:
+                if ((alliance == ALLIANCE.RED_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP) ||
+                (alliance == ALLIANCE.BLUE_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP))
+            {
+                    encoderDrive(TURN_SPEED, leftTurn90_left, leftTurn90_right, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                } else{
+                    encoderDrive(TURN_SPEED, rightTurn90_left, rightTurn90_right, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
+                }
+                pathState = PATHSTATE.DRIVE_TOWARD_HIVE;
+                break;
+            case DRIVE_TOWARD_HIVE:
+                pathState = PATHSTATE.WAIT_DELAY;
+                break;
+            case WAIT_DELAY:
+                pathState = PATHSTATE.LAUNCH_POLLEN;
+                break;
+            case LAUNCH_POLLEN:
+                pathState = PATHSTATE.TURN_TOWARD_WALL;
+                break;
+            case TURN_TOWARD_WALL:
+                pathState = PATHSTATE.DRIVE_TOWARD_WALL;
+                break;
+            case DRIVE_TOWARD_WALL:
+                pathState = PATHSTATE.TURN_TOWARD_PARK;
+                break;
+            case TURN_TOWARD_PARK:
+                pathState = PATHSTATE.DRIVE_TOWARD_PARK;
+                break;
+            case DRIVE_TOWARD_PARK:
+                pathState = PATHSTATE.FINISHED;
+                break;
+            case FINISHED:
+                telemetry.addLine("path finished");
+                break;
+            default: // final state
+                telemetry.addLine("path fail");
+        }
+
+
+
         if (opmodeRuntime.seconds() > waitTime && runningPath) {
 
             telemetry.addLine("launching");
@@ -245,11 +292,6 @@ public class AutoDriveByEncoder extends OpMode {
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
 
 
-            if (alliance == ALLIANCE.RED_ALLIANCE) {
-                encoderDrive(TURN_SPEED, 40, -40, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-            } else{
-                encoderDrive(TURN_SPEED, -40, 40, 4.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
-            }
 
             encoderDrive(DRIVE_SPEED, 24, 24, 5.0);  // S1: Forward 6 Inches with 5 Sec timeout
 
