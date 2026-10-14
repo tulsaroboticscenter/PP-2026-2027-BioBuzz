@@ -96,8 +96,9 @@ public class AutoDriveByEncoder extends OpMode {
     private double launchDelay = 5;
     private double turn90 = 28;
     private double distanceToHive = -10;
-    private double distanceToWall = 30;
-    private double distanceToPark = 24;
+    private double distanceToWall = 35;
+    private double distanceToParkDown = 12;
+    private double distanceToParkUp = 36;
     private double leftTurn90_left = -turn90;
     private double leftTurn90_right = turn90;
     private double rightTurn90_left = turn90;
@@ -288,7 +289,11 @@ public class AutoDriveByEncoder extends OpMode {
                 pathState = PATHSTATE.DRIVE_TOWARD_PARK;
                 break;
             case DRIVE_TOWARD_PARK:
-                encoderDrive(DRIVE_SPEED, distanceToPark, distanceToPark, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
+                if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
+                    encoderDrive(DRIVE_SPEED, distanceToParkUp, distanceToParkUp, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
+                } else {
+                    encoderDrive(DRIVE_SPEED, distanceToParkDown, distanceToParkDown, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
+                }
                 pathState = PATHSTATE.FINISHED;
                 break;
             case FINISHED:
