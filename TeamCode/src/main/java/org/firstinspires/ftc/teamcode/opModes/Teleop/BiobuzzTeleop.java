@@ -95,7 +95,7 @@ public class BiobuzzTeleop extends OpMode {
      */
     @Override
     public void loop() {
-
+/*
         //  if button A, reset IMU heading
         if (gamepad1.aWasPressed()) {
             imu.resetYaw();
@@ -105,6 +105,7 @@ public class BiobuzzTeleop extends OpMode {
         if (gamepad1.xWasPressed()){
             fieldCentric = !fieldCentric;
         }
+  */
         if (fieldCentric){
             // field centric
             curPosRadians = imu.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);

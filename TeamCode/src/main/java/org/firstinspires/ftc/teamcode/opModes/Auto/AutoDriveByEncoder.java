@@ -29,8 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.opModes.Auto;
 
-import static java.lang.Thread.sleep;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -96,9 +94,9 @@ public class AutoDriveByEncoder extends OpMode {
 
     private int gameDelaySeconds = 5;
     private double launchDelay = 5;
-    private double turn90 = 42;
+    private double turn90 = 28;
     private double distanceToHive = -10;
-    private double distanceToWall = 24;
+    private double distanceToWall = 30;
     private double distanceToPark = 24;
     private double leftTurn90_left = -turn90;
     private double leftTurn90_right = turn90;
@@ -248,19 +246,17 @@ public class AutoDriveByEncoder extends OpMode {
 
         switch (pathState){
             case ORIENT_LAUNCHER:
-                if ((alliance == ALLIANCE.RED_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP) ||
-                (alliance == ALLIANCE.BLUE_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP))
-            {
+                if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
                     encoderDrive(TURN_SPEED, leftTurn90_left, leftTurn90_right, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
                 } else{
                     encoderDrive(TURN_SPEED, rightTurn90_left, rightTurn90_right, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
                 }
-                pathState = PATHSTATE.DRIVE_TOWARD_HIVE;
-                break;
-            case DRIVE_TOWARD_HIVE:
-                encoderDrive(DRIVE_SPEED, distanceToHive, distanceToHive, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
                 pathState = PATHSTATE.WAIT_DELAY;
                 break;
+ //           case DRIVE_TOWARD_HIVE:
+ //               encoderDrive(DRIVE_SPEED, distanceToHive, distanceToHive, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
+ //               pathState = PATHSTATE.WAIT_DELAY;
+//                break;
             case WAIT_DELAY:
                 if (opmodeRuntime.seconds() > waitTime) {
                     pathState = PATHSTATE.LAUNCH_POLLEN;
@@ -271,9 +267,7 @@ public class AutoDriveByEncoder extends OpMode {
                 pathState = PATHSTATE.TURN_TOWARD_WALL;
                 break;
             case TURN_TOWARD_WALL:
-                if ((alliance == ALLIANCE.RED_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP) ||
-                        (alliance == ALLIANCE.BLUE_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP))
-                {
+                if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
                     encoderDrive(TURN_SPEED, leftTurn90_left, leftTurn90_right, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
                 } else{
                     encoderDrive(TURN_SPEED, rightTurn90_left, rightTurn90_right, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
@@ -286,9 +280,7 @@ public class AutoDriveByEncoder extends OpMode {
                 pathState = PATHSTATE.TURN_TOWARD_PARK;
                 break;
             case TURN_TOWARD_PARK:
-                if ((alliance == ALLIANCE.RED_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP) ||
-                        (alliance == ALLIANCE.BLUE_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP))
-                {
+                if (alliance == ALLIANCE.RED_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
                     encoderDrive(TURN_SPEED, leftTurn90_left, leftTurn90_right, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
                 } else{
                     encoderDrive(TURN_SPEED, rightTurn90_left, rightTurn90_right, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
