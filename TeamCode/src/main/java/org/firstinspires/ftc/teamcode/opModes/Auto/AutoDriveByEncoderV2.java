@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.opModes.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -62,9 +63,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  *  */
 
-@Autonomous(name = "Auto Drive By Encoder", group = "Robot",preselectTeleOp = "BioBuzz Teleop")
-//@Disabled
-public class AutoDriveByEncoder extends OpMode {
+@Autonomous(name = "Auto Drive By Encoder V2", group = "Robot",preselectTeleOp = "BioBuzz Teleop")
+@Disabled
+public class AutoDriveByEncoderV2 extends OpMode {
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
