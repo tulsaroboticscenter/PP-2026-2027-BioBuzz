@@ -78,8 +78,8 @@ public class AutoDriveTestJG extends OpMode {
     static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * PI);
-    static final double DRIVE_SPEED = 0.4;
-    static final double TURN_SPEED = 0.3;
+    static final double DRIVE_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
     /* Declare OpMode members. */
 
     private DcMotor leftFrontDrive = null;
@@ -95,10 +95,10 @@ public class AutoDriveTestJG extends OpMode {
  //   private double turn90 = 28;
 
     private double distanceToHive = -3;
-    private double distanceToWall = 30;
+    private double distanceToWall = 26;
     private double distanceToParkDown = 12;
-    private double distanceToParkUp = 60;
-    private double distanceToBackup = -15;
+    private double distanceToParkUp = 80;
+    private double distanceToBackup = -20;
 
 /*
     private double leftTurn90_left = -turn90;
@@ -302,7 +302,7 @@ public class AutoDriveTestJG extends OpMode {
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
                     encoderDrive(TURN_SPEED,-32, 32, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
                 } else{
-                    encoderDrive(TURN_SPEED, 30, -30, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, 31, -31, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
                 }
 
                 pathState = PATHSTATE.DRIVE_TOWARD_WALL;
@@ -315,23 +315,23 @@ public class AutoDriveTestJG extends OpMode {
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
                     encoderDrive(TURN_SPEED, -27, 27, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
                 } else{
-                    encoderDrive(TURN_SPEED, 27, -27, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, 32, -32, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
                 }
                 pathState = PATHSTATE.DRIVE_TOWARD_PARK;
                 break;
             case DRIVE_TOWARD_PARK:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
-                    encoderDrive(DRIVE_SPEED, distanceToParkUp, distanceToParkUp, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
+                    encoderDrive(DRIVE_SPEED, distanceToParkUp, distanceToParkUp, 4.0);  // S1: Forward 6 Inches with 5 Sec timeout
                 } else {
-                    encoderDrive(DRIVE_SPEED, distanceToParkDown, distanceToParkDown, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
+                    encoderDrive(DRIVE_SPEED, distanceToParkDown, distanceToParkDown, 4.0);  // S1: Forward 6 Inches with 5 Sec timeout
                 }
                 pathState = PATHSTATE.TURN_TOWARD_FIELD;
                 break;
             case TURN_TOWARD_FIELD:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
-                    encoderDrive(TURN_SPEED, -40, 40, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, -100, 100, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
                 } else{
-                    encoderDrive(TURN_SPEED, 27, -27, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, 30, -30, 4.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
                 }
                 pathState = PATHSTATE.BACKUP_TO_WALL;
                 break;
