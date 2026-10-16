@@ -260,7 +260,7 @@ public class AutoDriveByEncoderV2 extends OpMode {
 
                 pathState = PATHSTATE.WAIT_DELAY;}
                 break;
- //           case START_PATH:
+ //           case Drive_TOWARD_HIVE:
  //               encoderDrive(DRIVE_SPEED, distanceToHive, distanceToHive, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
  //               pathState = PATHSTATE.WAIT_DELAY;
 //                break;

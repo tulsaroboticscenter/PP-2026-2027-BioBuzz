@@ -285,7 +285,7 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
                 }
                 pathState = PATHSTATE.WAIT_DELAY;
                 break;
- //           case START_PATH:
+ //           case DRIVE_TOWARD_HIVE:
  //               encoderDrive(DRIVE_SPEED, distanceToHive, distanceToHive, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
  //               pathState = PATHSTATE.WAIT_DELAY;
 //                break;
