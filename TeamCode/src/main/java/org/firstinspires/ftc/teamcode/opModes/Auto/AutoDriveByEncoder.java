@@ -89,16 +89,16 @@ public class AutoDriveByEncoder extends OpMode {
     private DcMotorEx launcher = null;
     private CRServo windmillServo = null;
 
-    public final int LAUNCHER_TARGET_VELOCITY = 1250; //2678 RPM
-    public final int LAUNCHER_MIN_VELOCITY = 1200; //2571 RPM
+    public final int LAUNCHER_TARGET_VELOCITY = 1300; //2678 RPM
+    public final int LAUNCHER_MIN_VELOCITY = 1250; //2571 RPM
 
     private int gameDelaySeconds = 5;
     private double launchDelay = 5;
-    private double turn90 = 28;
+    private double turn90 = 27.5;
     private double distanceToHive = -10;
     private double distanceToWall = 35;
     private double distanceToParkDown = 12;
-    private double distanceToParkUp = 36;
+    private double distanceToParkUp = 65;
     private double leftTurn90_left = -turn90;
     private double leftTurn90_right = turn90;
     private double rightTurn90_left = turn90;
@@ -252,7 +252,12 @@ public class AutoDriveByEncoder extends OpMode {
                 } else{
                     encoderDrive(TURN_SPEED, rightTurn90_left, rightTurn90_right, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
                 }
-                pathState = PATHSTATE.WAIT_DELAY;
+                if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
+                    pathState = PATHSTATE.TURN_TOWARD_WALL;
+
+                } else {
+
+                pathState = PATHSTATE.WAIT_DELAY;}
                 break;
  //           case DRIVE_TOWARD_HIVE:
  //               encoderDrive(DRIVE_SPEED, distanceToHive, distanceToHive, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
@@ -281,7 +286,7 @@ public class AutoDriveByEncoder extends OpMode {
                 pathState = PATHSTATE.TURN_TOWARD_PARK;
                 break;
             case TURN_TOWARD_PARK:
-                if (alliance == ALLIANCE.RED_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
+                if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
                     encoderDrive(TURN_SPEED, leftTurn90_left, leftTurn90_right, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
                 } else{
                     encoderDrive(TURN_SPEED, rightTurn90_left, rightTurn90_right, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
