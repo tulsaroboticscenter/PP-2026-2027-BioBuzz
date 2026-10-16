@@ -131,13 +131,12 @@ public class AutoDriveByEncoder extends OpMode {
     enum HIVE_POSITION {
         HIVE_POSITION_UP,
         HIVE_POSITION_DOWN
-
     }
 
     HIVE_POSITION hivePosition = HIVE_POSITION.HIVE_POSITION_UP;
 
     enum PATHSTATE {
-        DRIVE_TOWARD_HIVE,
+        START_PATH,
         WAIT_DELAY,
         LAUNCH_POLLEN,
         TURN_TOWARD_WALL,
@@ -148,7 +147,7 @@ public class AutoDriveByEncoder extends OpMode {
         BACKUP_TO_WALL,
         FINISHED
     }
-    PATHSTATE pathState = PATHSTATE.DRIVE_TOWARD_HIVE;
+    PATHSTATE pathState = PATHSTATE.START_PATH;
 
     @Override
     public void init() {
@@ -275,9 +274,7 @@ public class AutoDriveByEncoder extends OpMode {
                 pathState = PATHSTATE.WAIT_DELAY;
                 break;
  */
-            case DRIVE_TOWARD_HIVE:
-
-//                encoderDrive(DRIVE_SPEED, distanceToHive, distanceToHive, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
+            case START_PATH:     // Determine path start from init choices
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
                     pathState = PATHSTATE.LAUNCH_POLLEN;
                 } else if (waitAndLaunch){
@@ -300,28 +297,28 @@ public class AutoDriveByEncoder extends OpMode {
                 break;
             case TURN_TOWARD_WALL:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
-                    encoderDrive(TURN_SPEED,-32, 32, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                    encoderDrive(TURN_SPEED,-32, 32, 4.0);  // Turn left with 4 Sec timeout
                 } else{
-                    encoderDrive(TURN_SPEED, 31, -31, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, 31, -31, 4.0);  // Turn Right with 4 Sec timeout
                 }
 
                 pathState = PATHSTATE.DRIVE_TOWARD_WALL;
                 break;
             case DRIVE_TOWARD_WALL:
-                encoderDrive(DRIVE_SPEED, distanceToWall, distanceToWall, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
+                encoderDrive(DRIVE_SPEED, distanceToWall, distanceToWall, 4.0);  // drive toward wall with 4 Sec timeout
                 pathState = PATHSTATE.TURN_TOWARD_PARK;
                 break;
             case TURN_TOWARD_PARK:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
-                    encoderDrive(TURN_SPEED, -27, 27, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, -27, 27, 4.0);  // Turn left with 4 Sec timeout
                 } else{
-                    encoderDrive(TURN_SPEED, 32, -32, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, 32, -32, 4.0);  // Turn Right with 4 Sec timeout
                 }
                 pathState = PATHSTATE.DRIVE_TOWARD_PARK;
                 break;
             case DRIVE_TOWARD_PARK:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
-                    encoderDrive(DRIVE_SPEED, distanceToParkUp, distanceToParkUp, 4.0);  // S1: Forward 6 Inches with 5 Sec timeout
+                    encoderDrive(DRIVE_SPEED, distanceToParkUp, distanceToParkUp, 5.0);  // S1: Forward 6 Inches with 5 Sec timeout
                 } else {
                     encoderDrive(DRIVE_SPEED, distanceToParkDown, distanceToParkDown, 4.0);  // S1: Forward 6 Inches with 5 Sec timeout
                 }
@@ -329,7 +326,7 @@ public class AutoDriveByEncoder extends OpMode {
                 break;
             case TURN_TOWARD_FIELD:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
-                    encoderDrive(TURN_SPEED, -100, 100, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, -30, 30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
                 } else{
                     encoderDrive(TURN_SPEED, 30, -30, 4.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
                 }
