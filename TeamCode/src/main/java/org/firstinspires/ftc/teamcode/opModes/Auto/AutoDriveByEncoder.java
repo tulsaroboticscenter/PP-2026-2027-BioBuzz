@@ -62,9 +62,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  *  */
 
-@Autonomous(name = "Auto Drive Test JG", group = "Robot",preselectTeleOp = "BioBuzz Teleop")
+@Autonomous(name = "Auto Drive By Encoder", group = "Robot",preselectTeleOp = "BioBuzz Teleop")
 //@Disabled
-public class AutoDriveTestJG extends OpMode {
+public class AutoDriveByEncoder extends OpMode {
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
