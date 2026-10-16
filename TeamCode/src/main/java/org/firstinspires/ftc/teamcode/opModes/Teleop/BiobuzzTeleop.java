@@ -66,14 +66,12 @@ public class BiobuzzTeleop extends OpMode {
         intake.init(hardwareMap);
         launcher.init(hardwareMap);
 
-//        imu.resetYaw();
-
         /*
          * Tell the driver that initialization is complete.
          */
         telemetry.addData("Status", "Initialized");
-        telemetry.addLine("Press X to toggle field centric");
-        telemetry.addData("Field centric ", fieldCentric);
+        telemetry.addLine("Press X to reset heading");
+
     }
 
     /*
@@ -95,12 +93,12 @@ public class BiobuzzTeleop extends OpMode {
      */
     @Override
     public void loop() {
-/*
-        //  if button A, reset IMU heading
-        if (gamepad1.aWasPressed()) {
+
+        //  if button X, reset IMU heading
+        if (gamepad1.xWasPressed()) {
             imu.resetYaw();
         }
-
+/*
         // if button X, toggle field centric
         if (gamepad1.xWasPressed()){
             fieldCentric = !fieldCentric;

@@ -19,6 +19,7 @@ public class Imu {
                 RevHubOrientationOnRobot(logoDirection, usbDirection);
         imu.initialize(new com.qualcomm.robotcore.hardware.IMU.Parameters(orientationOnRobot));
 
+        imu.resetYaw();
     }
     public void resetYaw(){
         imu.resetYaw();

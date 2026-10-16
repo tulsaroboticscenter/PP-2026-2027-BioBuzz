@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /*
- * This teleop class was devived from the GoBilda staerter example teleop, modified to be field centric
+ * This teleop class was devived from the GoBilda starter example teleop, modified to be field centric
  *
  */
 
