@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opModes.Teleop;
-
+/*
+    jg - field centric only. can reset IMU though
+ */
 /*   MIT License
  *   Copyright (c) [2026] [Base 10 Assets, LLC]
  *
@@ -53,7 +55,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  * we will also need to adjust the "PIDF" coefficients with some that are a better fit for our application.
  */
 
-@TeleOp(name = "Teleop Field Test", group = "StarterBot")
+@TeleOp(name = "Teleop Field Test", group = "Teleop")
 //@Disabled
 public class TeleopTest extends OpMode {
 

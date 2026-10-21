@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opModes.Teleop;
-
+/*
+JG - added field centric code. has ability to reset IMU and switch between robot
+    and field centric modes
+ */
 /*   MIT License
  *   Copyright (c) [2026] [Base 10 Assets, LLC]
  *
@@ -45,7 +48,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  */
 
 @TeleOp(name = "First Teleop", group = "Teleop")
-@Disabled
+//@Disabled
 public class FirstTeleop extends OpMode {
 
     // Declare OpMode members.
@@ -214,6 +217,13 @@ public class FirstTeleop extends OpMode {
          * Note, moving the joystick forward on most gamepads results in a negative signal, so
          * we invert it before passing it to the function.
          */
+        if (gamepad1.a) {
+            imu.resetYaw();
+            telemetry.addData("reset heading ",imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+
+        }
+
+
         // if button X, toggle field centric
         if (gamepad1.xWasPressed()){
             fieldCentric = !fieldCentric;
