@@ -34,7 +34,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Launcher;
 
 /*
- * This teleop class was devived from the GoBilda staerter example teleop, modified to be field centric
+ * This teleop class was devived from the GoBilda starter example teleop, modified to be field centric
  *
  */
 
