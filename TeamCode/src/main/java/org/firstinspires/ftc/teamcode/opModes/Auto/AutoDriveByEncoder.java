@@ -94,7 +94,6 @@ public class AutoDriveByEncoder extends OpMode {
     private double launchDelay = 5; // time allowed for launch
  //   private double turn90 = 28;
 
-    private double distanceToHive = -3;
     private double distanceToWall = 26;
     private double distanceToParkDown = 12;
     private double distanceToParkUp = 80;
@@ -320,6 +319,8 @@ public class AutoDriveByEncoder extends OpMode {
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
                     encoderDrive(DRIVE_SPEED, distanceToParkUp, distanceToParkUp, 5.0);  // S1: Forward with 5 Sec timeout
                 } else {
+                    telemetry.addLine("drive ");
+                    displayData(distanceToParkDown,distanceToParkDown);
                     encoderDrive(DRIVE_SPEED, distanceToParkDown, distanceToParkDown, 4.0);  // S1: Forward with 4 Sec timeout
                 }
                 pathState = PATHSTATE.TURN_TOWARD_FIELD;
@@ -328,6 +329,8 @@ public class AutoDriveByEncoder extends OpMode {
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
                     encoderDrive(TURN_SPEED, 30, -30, 4.0);  // S2: Turn Right with 4 Sec timeout
                 } else{
+                    telemetry.addLine("turn ");
+                    displayData(-30,30);
                     encoderDrive(TURN_SPEED, -30, 30, 4.0);  // S2: Turn left with 4 Sec timeout
                 }
                 pathState = PATHSTATE.BACKUP_TO_WALL;
@@ -404,6 +407,22 @@ public class AutoDriveByEncoder extends OpMode {
         windmillServo.setPower(0);
         launcher.setVelocity(0);
 
+
+    }
+
+    void displayData(double leftInches,double rightInches) {
+        int newLeftTarget;
+        int newRightTarget;
+
+
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = leftFrontDrive.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+        newRightTarget = rightFrontDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        // Display it for the driver.
+                telemetry.addData("Running to", " %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Currently at", " at %7d :%7d",
+                       leftFrontDrive.getCurrentPosition(), rightFrontDrive.getCurrentPosition());
+                telemetry.update();
 
     }
 
