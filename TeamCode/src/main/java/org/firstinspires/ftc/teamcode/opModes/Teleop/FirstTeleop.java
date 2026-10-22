@@ -48,7 +48,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  */
 
 @TeleOp(name = "First Teleop", group = "Teleop")
-//@Disabled
+@Disabled
 public class FirstTeleop extends OpMode {
 
     // Declare OpMode members.
