@@ -54,7 +54,7 @@ public class BiobuzzTeleop extends OpMode {
     double intakePower;
 
     double curPosRadians;
-    boolean fieldCentric = true;
+    boolean fieldCentric = false;
 
     /*
      * Code to run ONCE when the driver hits INIT

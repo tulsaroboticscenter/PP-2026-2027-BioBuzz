@@ -13,8 +13,8 @@ public class Launcher {
     public DcMotorEx launcher = null;
     public CRServo windmillServo = null;
 
-    public final int LAUNCHER_TARGET_VELOCITY = 1250; //2678 RPM
-    public final int LAUNCHER_MIN_VELOCITY = 1200; //2571 RPM
+    public final int LAUNCHER_TARGET_VELOCITY = 1350; //2678 RPM
+    public final int LAUNCHER_MIN_VELOCITY = 1300; //2571 RPM
 
     public void init(HardwareMap hwMap) {
         launcher = hwMap.get(DcMotorEx.class, "launcher");

@@ -34,6 +34,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -71,7 +72,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Imu;
  *  */
 
 @Autonomous(name = "Auto Drive 4 Wheel", group = "Robot",preselectTeleOp = "BioBuzz Teleop")
-//@Disabled
+@Disabled
 public class AutoDriveByEncoder4Wheel extends OpMode {
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
