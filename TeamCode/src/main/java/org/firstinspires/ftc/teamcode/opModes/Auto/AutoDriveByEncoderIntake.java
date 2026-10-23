@@ -337,9 +337,6 @@ public class AutoDriveByEncoderIntake extends OpMode {
                 pathState = PATHSTATE.TURN_TOWARD_FIELD;
                 break;
             case TURN_TOWARD_FIELD:
-                intake.intake.setPower(0);          // turn off intakes
-                intake.leftIntakeServo.setPower(0);
-                intake.rightIntakeServo.setPower(0);
 
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
                     encoderDrive(TURN_SPEED, 30, -30, 4.0);  // S2: Turn Right with 4 Sec timeout
@@ -348,6 +345,9 @@ public class AutoDriveByEncoderIntake extends OpMode {
                     displayData(-30,30);
                     encoderDrive(TURN_SPEED, -30, 30, 4.0);  // S2: Turn left with 4 Sec timeout
                 }
+                intake.intake.setPower(0);          // turn off intakes
+                intake.leftIntakeServo.setPower(0);
+                intake.rightIntakeServo.setPower(0);
                 pathState = PATHSTATE.BACKUP_TO_WALL;
                 break;
             case BACKUP_TO_WALL:
