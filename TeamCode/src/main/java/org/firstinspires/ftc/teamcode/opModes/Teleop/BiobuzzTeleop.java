@@ -94,10 +94,12 @@ public class BiobuzzTeleop extends OpMode {
     @Override
     public void loop() {
 
+/*
         //  if button A, reset IMU heading
         if (gamepad1.aWasPressed()) {
             imu.resetYaw();
         }
+
 
         // if button X, toggle field centric
         if (gamepad1.xWasPressed()){
@@ -109,9 +111,10 @@ public class BiobuzzTeleop extends OpMode {
             curPosRadians = imu.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
             driveTrain.driveRobotField(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, curPosRadians);
         } else {
+*/
             // robot centric
             driveTrain.mecanumDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-        }
+//        }
 
         /*
          * Set the intake power variable to equal the right trigger, minus the left trigger.
