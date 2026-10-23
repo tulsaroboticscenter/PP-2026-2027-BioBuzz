@@ -251,7 +251,7 @@ public class AutoDriveByEncoder extends OpMode {
     public void start(){
 
         opmodeRuntime.reset();
-        launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
+//        launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
         if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
             waitTime = gameDelaySeconds;
         }
@@ -275,8 +275,10 @@ public class AutoDriveByEncoder extends OpMode {
  */
             case START_PATH:     // Determine path start from init choices
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
+                    launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
                     pathState = PATHSTATE.LAUNCH_POLLEN;                // launch pollen if hive up
                 } else if (waitAndLaunch){                              // check wait & launch choice
+                    launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
                     pathState = PATHSTATE.WAIT_DELAY;
                 } else {
                     pathState = PATHSTATE.TURN_TOWARD_WALL;
@@ -293,6 +295,7 @@ public class AutoDriveByEncoder extends OpMode {
             case LAUNCH_POLLEN:
                 launch();
                 pathState = PATHSTATE.TURN_TOWARD_WALL;
+                launcher.setVelocity(0);   // turn off launcher
                 break;
             case TURN_TOWARD_WALL:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
