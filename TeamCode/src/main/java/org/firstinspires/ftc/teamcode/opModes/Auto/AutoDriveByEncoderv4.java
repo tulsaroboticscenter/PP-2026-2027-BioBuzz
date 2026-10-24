@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.opModes.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -37,8 +38,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -64,9 +63,9 @@ import org.firstinspires.ftc.teamcode.Hardware.Intake;
  *
  *  */
 
-@Autonomous(name = "Auto Drive By Encoder Intake", group = "Robot",preselectTeleOp = "BioBuzz Teleop")
-//@Disabled
-public class AutoDriveByEncoderIntake extends OpMode {
+@Autonomous(name = "Auto Drive By Encoder v4", group = "Robot",preselectTeleOp = "BioBuzz Teleop")
+@Disabled
+public class AutoDriveByEncoderv4 extends OpMode {
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -88,7 +87,6 @@ public class AutoDriveByEncoderIntake extends OpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotorEx launcher = null;
     private CRServo windmillServo = null;
-    private Intake intake = new Intake();
 
     public final int LAUNCHER_TARGET_VELOCITY = 1350; //2678 RPM
     public final int LAUNCHER_MIN_VELOCITY = 1300; //2571 RPM
@@ -179,7 +177,6 @@ public class AutoDriveByEncoderIntake extends OpMode {
         windmillServo.setPower(0);
         windmillServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        intake.init(hardwareMap);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at", "%7d :%7d",
@@ -302,10 +299,6 @@ public class AutoDriveByEncoderIntake extends OpMode {
                 launcher.setVelocity(0);   // turn off launcher
                 break;
             case TURN_TOWARD_WALL:
-                intake.intake.setPower(-.5);          // turn intakes to reverse to try to push objects
-                intake.leftIntakeServo.setPower(-.5);
-                intake.rightIntakeServo.setPower(-.5);
-
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
                     encoderDrive(TURN_SPEED, 31, -31, 4.0);  // Turn Right with 4 Sec timeout
                 } else{
@@ -337,7 +330,6 @@ public class AutoDriveByEncoderIntake extends OpMode {
                 pathState = PATHSTATE.TURN_TOWARD_FIELD;
                 break;
             case TURN_TOWARD_FIELD:
-
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
                     encoderDrive(TURN_SPEED, 30, -30, 4.0);  // S2: Turn Right with 4 Sec timeout
                 } else{
@@ -345,9 +337,6 @@ public class AutoDriveByEncoderIntake extends OpMode {
                     displayData(-30,30);
                     encoderDrive(TURN_SPEED, -30, 30, 4.0);  // S2: Turn left with 4 Sec timeout
                 }
-                intake.intake.setPower(0);          // turn off intakes
-                intake.leftIntakeServo.setPower(0);
-                intake.rightIntakeServo.setPower(0);
                 pathState = PATHSTATE.BACKUP_TO_WALL;
                 break;
             case BACKUP_TO_WALL:

@@ -38,6 +38,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
+
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
 
@@ -86,6 +88,7 @@ public class AutoDriveByEncoder extends OpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotorEx launcher = null;
     private CRServo windmillServo = null;
+    private Intake intake = new Intake();
 
     public final int LAUNCHER_TARGET_VELOCITY = 1350; //2678 RPM
     public final int LAUNCHER_MIN_VELOCITY = 1300; //2571 RPM
@@ -95,8 +98,8 @@ public class AutoDriveByEncoder extends OpMode {
  //   private double turn90 = 28;
 
     private double distanceToWall = 26;
-    private double distanceToParkDown = 12;
-    private double distanceToParkUp = 80;
+    private double distanceToParkDown = 16;
+    private double distanceToParkUp = 85;
     private double distanceToBackup = -20;
 
 /*
@@ -176,6 +179,7 @@ public class AutoDriveByEncoder extends OpMode {
         windmillServo.setPower(0);
         windmillServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        intake.init(hardwareMap);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at", "%7d :%7d",
@@ -298,6 +302,10 @@ public class AutoDriveByEncoder extends OpMode {
                 launcher.setVelocity(0);   // turn off launcher
                 break;
             case TURN_TOWARD_WALL:
+                intake.intake.setPower(-.5);          // turn intakes to reverse to try to push objects
+                intake.leftIntakeServo.setPower(-.5);
+                intake.rightIntakeServo.setPower(-.5);
+
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
                     encoderDrive(TURN_SPEED, 31, -31, 4.0);  // Turn Right with 4 Sec timeout
                 } else{
@@ -314,7 +322,7 @@ public class AutoDriveByEncoder extends OpMode {
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
                     encoderDrive(TURN_SPEED, 32, -32, 4.0);  // Turn Right with 4 Sec timeout
                 } else{
-                    encoderDrive(TURN_SPEED, -27, 27, 4.0);  // Turn left with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, -30, 30, 4.0);  // Turn left with 4 Sec timeout
                 }
                 pathState = PATHSTATE.DRIVE_TOWARD_PARK;
                 break;
@@ -329,6 +337,7 @@ public class AutoDriveByEncoder extends OpMode {
                 pathState = PATHSTATE.TURN_TOWARD_FIELD;
                 break;
             case TURN_TOWARD_FIELD:
+
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
                     encoderDrive(TURN_SPEED, 30, -30, 4.0);  // S2: Turn Right with 4 Sec timeout
                 } else{
@@ -336,6 +345,9 @@ public class AutoDriveByEncoder extends OpMode {
                     displayData(-30,30);
                     encoderDrive(TURN_SPEED, -30, 30, 4.0);  // S2: Turn left with 4 Sec timeout
                 }
+                intake.intake.setPower(0);          // turn off intakes
+                intake.leftIntakeServo.setPower(0);
+                intake.rightIntakeServo.setPower(0);
                 pathState = PATHSTATE.BACKUP_TO_WALL;
                 break;
             case BACKUP_TO_WALL:
