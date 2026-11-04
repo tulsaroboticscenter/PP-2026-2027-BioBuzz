@@ -29,15 +29,12 @@ JG - added field centric code. has ability to reset IMU and switch between robot
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -224,7 +221,7 @@ public class PinPointTeleop extends OpMode {
         }
         if (fieldCentric){
             // field centric
-            curPosRadians = pinpoint.getHeading(AngleUnit.RADIANS);
+            curPosRadians = pinpoint.getHeading();
            // curPosRadians = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
             driveRobotField(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, curPosRadians);
         } else {
