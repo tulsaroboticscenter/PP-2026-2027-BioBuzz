@@ -7,18 +7,18 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.Hardware.PinPoint;
 import org.firstinspires.ftc.teamcode.goBilda.GoBildaPinpointDriver;
 
 @Disabled
 @TeleOp(name = "Pinpoint test")
 public class PinPointTest extends OpMode {
-    GoBildaPinpointDriver pinpoint;
+    private PinPoint pinPoint = new PinPoint();
 
     @Override
     public void init() {
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
-        configurePinpoint();
-        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0));
+        pinPoint.init(hardwareMap);
+        pinPoint.pinPoint.resetPosAndIMU(); // reset heading to 0
      }
 
     @Override
@@ -27,11 +27,11 @@ public class PinPointTest extends OpMode {
         telemetry.addLine("Press A to reset position");
 
         if (gamepad1.a){
-            pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0));
+            pinPoint.pinPoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0));
         }
 
-        pinpoint.update();
-        Pose2D pose2D = pinpoint.getPosition();
+        pinPoint.pinPoint.update();
+        Pose2D pose2D = pinPoint.pinPoint.getPosition();
 
         telemetry.addData("X in inches = ",pose2D.getX(DistanceUnit.INCH));
         telemetry.addData("Y in inches = ",pose2D.getY(DistanceUnit.INCH));
@@ -39,13 +39,4 @@ public class PinPointTest extends OpMode {
 
     }
 
-    public void configurePinpoint(){
-        pinpoint.setOffsets(-157.48,-175.26);
-        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
-                GoBildaPinpointDriver.EncoderDirection.FORWARD);
-
-        pinpoint.resetPosAndIMU();
-
-    }
-}
+ }
