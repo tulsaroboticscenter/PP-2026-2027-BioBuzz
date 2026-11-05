@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.classes.Globals;
 
-@Disabled
+//@Disabled
 @TeleOp(name = "Teleop Test Globals", group = "Test")
 
 public class TeleopTestGlobals extends OpMode {
