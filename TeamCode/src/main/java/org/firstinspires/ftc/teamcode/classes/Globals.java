@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.opModes.Auto.AutoDriveByEncoder;
 
 public class Globals {
     public static Pose2D lastKnownPosition = null;
-    enum ALLIANCE {
+    public enum ALLIANCE {
         BLUE_ALLIANCE,
         RED_ALLIANCE
     }
