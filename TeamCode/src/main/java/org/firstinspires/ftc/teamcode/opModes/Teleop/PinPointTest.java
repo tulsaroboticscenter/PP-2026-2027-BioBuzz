@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes.Teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.goBilda.GoBildaPinpointDriver;
 
+@Disabled
 @TeleOp(name = "Pinpoint test")
 public class PinPointTest extends OpMode {
     GoBildaPinpointDriver pinpoint;

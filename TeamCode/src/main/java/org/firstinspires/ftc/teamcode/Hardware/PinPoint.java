@@ -17,7 +17,7 @@ public class PinPoint {
             pinPoint.setOffsets(-157.48,-175.26);
             pinPoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
             pinPoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
-                    GoBildaPinpointDriver.EncoderDirection.REVERSED);
+                    GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
             pinPoint.resetPosAndIMU();
 
