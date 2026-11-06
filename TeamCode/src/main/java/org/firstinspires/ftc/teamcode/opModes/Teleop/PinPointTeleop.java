@@ -354,7 +354,7 @@ public class PinPointTeleop extends OpMode {
 
         pinpoint.resetPosAndIMU();
 
-        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 180));
+//        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0));
 
     }
 }
