@@ -78,8 +78,8 @@ public class PinPointTeleop extends OpMode {
      * in the launch() function to only run the windmill servo when the motor is spinning fast
      * enough to make a successful throw.
      */
-    public final int LAUNCHER_TARGET_VELOCITY = 1250; //2678 RPM
-    public final int LAUNCHER_MIN_VELOCITY = 1200; //2571 RPM
+    public final int LAUNCHER_TARGET_VELOCITY = 1350; //2678 RPM
+    public final int LAUNCHER_MIN_VELOCITY = 1300; //2571 RPM
 
 
     /*
@@ -219,6 +219,8 @@ public class PinPointTeleop extends OpMode {
         if (gamepad1.xWasPressed()){
             fieldCentric = !fieldCentric;
         }
+
+        pinpoint.update();
         if (fieldCentric){
             // field centric
             curPosRadians = pinpoint.getHeading();
@@ -228,7 +230,8 @@ public class PinPointTeleop extends OpMode {
             // robot centric
             mecanumDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         }
-
+        telemetry.addData("Field centric ", fieldCentric);
+        telemetry.addData("heading ",pinpoint.getHeading());
         /*
          * Set the intake power variable to equal the right trigger, minus the left trigger.
          * Each trigger outputs a signal from 0-1, with 0 as fully released, and 1 fully depressed.
@@ -252,6 +255,8 @@ public class PinPointTeleop extends OpMode {
          * change the intake power. So we need to give our launch function a chance to modify the
          * variable before we write it to our motor and servos.
          */
+
+
 
         intake.setPower(intakePower);
         leftIntakeServo.setPower(intakePower);
@@ -354,7 +359,7 @@ public class PinPointTeleop extends OpMode {
 
         pinpoint.resetPosAndIMU();
 
-//        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0));
+        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 0, 0, AngleUnit.DEGREES, 0));
 
     }
 }

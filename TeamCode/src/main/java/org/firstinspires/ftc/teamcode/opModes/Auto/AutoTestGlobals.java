@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.classes.Globals;
 
 //@Disabled
-@Autonomous(name = "Auto Test Globals", group = "Test",preselectTeleOp = "TeleopTestGlobals")
+@Autonomous(name = "Auto Test Globals", group = "Test",preselectTeleOp = "Teleop Test Globals")
 
 public class AutoTestGlobals  extends OpMode {
     boolean allianceSelected = false;
