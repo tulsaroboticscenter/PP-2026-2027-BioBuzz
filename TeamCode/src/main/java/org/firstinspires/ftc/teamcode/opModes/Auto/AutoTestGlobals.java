@@ -66,7 +66,9 @@ public class AutoTestGlobals  extends OpMode {
           driveTrain.mecanumDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
       }
 
+      pinPoint.pinPoint.update();
       Globals.lastKnownPosition = pinPoint.pinPoint.getPosition();
+
       telemetry.addData("position X",Globals.lastKnownPosition.getX(DistanceUnit.INCH));
       telemetry.addData("position Y",Globals.lastKnownPosition.getY(DistanceUnit.INCH));
       telemetry.addData("Heading ",Globals.lastKnownPosition.getHeading(AngleUnit.DEGREES));
