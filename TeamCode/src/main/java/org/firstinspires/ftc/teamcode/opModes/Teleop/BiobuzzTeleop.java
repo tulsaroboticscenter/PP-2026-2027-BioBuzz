@@ -32,6 +32,7 @@ import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 import org.firstinspires.ftc.teamcode.Hardware.Imu;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Launcher;
+import org.firstinspires.ftc.teamcode.Hardware.PinPoint;
 
 /*
  * This teleop class was devived from the GoBilda starter example teleop, modified to be field centric
@@ -46,7 +47,7 @@ public class BiobuzzTeleop extends OpMode {
     //********** motors ***************************
     private DriveTrain driveTrain = new DriveTrain();
     private Intake intake = new Intake();
-    private Imu imu = new Imu();
+    private PinPoint pinpoint = new PinPoint();
     private Launcher launcher = new Launcher();
 
 
@@ -54,7 +55,7 @@ public class BiobuzzTeleop extends OpMode {
     double intakePower;
 
     double curPosRadians;
-    boolean fieldCentric = false;
+    boolean fieldCentric = true;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -62,7 +63,7 @@ public class BiobuzzTeleop extends OpMode {
     @Override
     public void init() {
         driveTrain.init(hardwareMap);
-        imu.init(hardwareMap);
+        pinpoint.init(hardwareMap);
         intake.init(hardwareMap);
         launcher.init(hardwareMap);
 
@@ -70,7 +71,8 @@ public class BiobuzzTeleop extends OpMode {
          * Tell the driver that initialization is complete.
          */
         telemetry.addData("Status", "Initialized");
-        telemetry.addLine("Press X to reset heading");
+        telemetry.addLine("Press A to reset heading");
+        telemetry.addLine("Press X to toggle field centric");
 
     }
 
@@ -94,10 +96,10 @@ public class BiobuzzTeleop extends OpMode {
     @Override
     public void loop() {
 
-/*
+
         //  if button A, reset IMU heading
         if (gamepad1.aWasPressed()) {
-            imu.resetYaw();
+            pinpoint.pinPoint.resetPosAndIMU();
         }
 
 
@@ -108,13 +110,14 @@ public class BiobuzzTeleop extends OpMode {
 
         if (fieldCentric){
             // field centric
-            curPosRadians = imu.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//            curPosRadians = imu.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            curPosRadians = pinpoint.pinPoint.getHeading();
             driveTrain.driveRobotField(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, curPosRadians);
         } else {
-*/
+
             // robot centric
             driveTrain.mecanumDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-//        }
+        }
 
         /*
          * Set the intake power variable to equal the right trigger, minus the left trigger.
@@ -146,6 +149,7 @@ public class BiobuzzTeleop extends OpMode {
         /*
          * Show motor powers on the Driver Station via telemetry.
          */
+        telemetry.addData("field centric ",fieldCentric);
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", driveTrain.leftFrontPower, driveTrain.rightFrontPower);
         telemetry.addData("Triggers", "left (%.2f, right (%.2f)",gamepad1.left_trigger, gamepad1.right_trigger);
         telemetry.addData("Velocity ",launcher.launcher.getVelocity());
