@@ -68,11 +68,13 @@ public class AutoTestGlobals  extends OpMode {
 
       pinPoint.pinPoint.update();
       Globals.lastKnownPosition = pinPoint.pinPoint.getPosition();
+      Globals.fieldCentric = fieldCentric;
 
       telemetry.addData("position X",Globals.lastKnownPosition.getX(DistanceUnit.INCH));
       telemetry.addData("position Y",Globals.lastKnownPosition.getY(DistanceUnit.INCH));
       telemetry.addData("Heading ",Globals.lastKnownPosition.getHeading(AngleUnit.DEGREES));
       telemetry.addData("Alliance ",Globals.alliance);
+      telemetry.addData("field centric ",fieldCentric);
 
   }
 }
