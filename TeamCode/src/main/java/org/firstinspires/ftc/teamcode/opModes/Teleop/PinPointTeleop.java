@@ -29,6 +29,7 @@ JG - added field centric code. has ability to reset IMU and switch between robot
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -48,7 +49,7 @@ import org.firstinspires.ftc.teamcode.goBilda.GoBildaPinpointDriver;
  */
 
 @TeleOp(name = "Pin Point Teleop", group = "Teleop")
-//@Disabled
+@Disabled
 public class PinPointTeleop extends OpMode {
 
     // Declare OpMode members.
