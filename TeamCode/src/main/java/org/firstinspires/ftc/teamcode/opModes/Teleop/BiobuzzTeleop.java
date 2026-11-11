@@ -107,7 +107,7 @@ public class BiobuzzTeleop extends OpMode {
         if (gamepad1.xWasPressed()){
             fieldCentric = !fieldCentric;
         }
-
+        pinpoint.pinPoint.update();
         if (fieldCentric){
             // field centric
 //            curPosRadians = imu.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
