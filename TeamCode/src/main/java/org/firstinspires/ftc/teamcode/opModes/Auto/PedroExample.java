@@ -36,11 +36,13 @@ public class PedroExample extends OpMode {
     }
 
     public void start(){
-        follower.follow(path1());
 
     }
 
     public void loop(){
-
+        follower.follow(path1());
+        while (follower.following()){
+        follower.update();
+         }
     }
 }
