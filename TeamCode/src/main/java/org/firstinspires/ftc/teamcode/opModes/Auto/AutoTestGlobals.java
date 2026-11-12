@@ -43,6 +43,9 @@ public class AutoTestGlobals  extends OpMode {
               Globals.alliance = Globals.ALLIANCE.BLUE_ALLIANCE;
               allianceSelected = true;
           }
+      else{
+              telemetry.addData("alliance ",Globals.alliance);
+          }
       }
   }
   public void loop() {
