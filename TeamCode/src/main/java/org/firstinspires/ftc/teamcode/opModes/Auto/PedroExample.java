@@ -36,6 +36,7 @@ public class PedroExample extends OpMode {
     }
 
     public void start(){
+        follower.follow(path1());
 
     }
 
