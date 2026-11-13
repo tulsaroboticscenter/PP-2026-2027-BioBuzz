@@ -100,7 +100,7 @@ public class AutoDriveByEncoder extends OpMode {
     private double distanceToWall = 26;
     private double distanceToParkDown = 16;
     private double distanceToParkUp = 85;
-    private double distanceToBackup = -20;
+    private double distanceToBackup = -17;
 
 /*
     private double leftTurn90_left = -turn90;
