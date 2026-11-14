@@ -29,10 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.opModes.Auto;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
-import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
-
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -40,12 +36,10 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Hardware.Imu;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -71,9 +65,9 @@ import org.firstinspires.ftc.teamcode.Hardware.Imu;
  *
  *  */
 
-@Autonomous(name = "Auto Drive 4 Wheel", group = "Robot",preselectTeleOp = "BioBuzz Teleop")
+@Autonomous(name = "Auto Drive By Encoder v2", group = "Robot",preselectTeleOp = "BioBuzz Teleop")
 @Disabled
-public class AutoDriveByEncoder4Wheel extends OpMode {
+public class AutoDriveByEncoderv2 extends OpMode {
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -91,41 +85,40 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
     static final double TURN_SPEED = 0.5;
     /* Declare OpMode members. */
 
-    private int waitTime = 0;
-
     private DcMotor leftFrontDrive = null;
     private DcMotor rightFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightBackDrive = null;
-
     private DcMotorEx launcher = null;
     private CRServo windmillServo = null;
+    private Intake intake = new Intake();
 
-    private Imu imu = null;
-
-    public final int LAUNCHER_TARGET_VELOCITY = 1250; //2678 RPM
-    public final int LAUNCHER_MIN_VELOCITY = 1200; //2571 RPM
+    public final int LAUNCHER_TARGET_VELOCITY = 1350; //2678 RPM
+    public final int LAUNCHER_MIN_VELOCITY = 1300; //2571 RPM
 
     private int gameDelaySeconds = 5;
-    private double launchDelay = 5;
-    private double turn90 = 28;
-    private double distanceToHive = -10;
-    private double distanceToWall = 35;
-    private double distanceToParkDown = 12;
-    private double distanceToParkUp = 36;
+    private double launchDelay = 5; // time allowed for launch
+ //   private double turn90 = 28;
+
+    private double distanceToWall = 26;
+    private double distanceToParkDown = 16;
+    private double distanceToParkUp = 85;
+    private double distanceToBackup = -17;
+
+/*
     private double leftTurn90_left = -turn90;
     private double leftTurn90_right = turn90;
     private double rightTurn90_left = turn90;
     private double rightTurn90_right = -turn90;
-
-
+*/
+    private int waitTime = 0;
     private ElapsedTime pathRuntime = new ElapsedTime();
     private ElapsedTime opmodeRuntime = new ElapsedTime();
     private ElapsedTime launcherTime = new ElapsedTime();
+    private boolean waitAndLaunch = true;
 
     enum InitState {
         GET_ALLIANCE,
         GET_HIVE_POSITION,
+        GET_WAIT_AND_LAUNCH,
         CONFIRM_SELECTIONS,
         FINISHED
     }
@@ -141,23 +134,23 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
     enum HIVE_POSITION {
         HIVE_POSITION_UP,
         HIVE_POSITION_DOWN
-
     }
 
     HIVE_POSITION hivePosition = HIVE_POSITION.HIVE_POSITION_UP;
 
     enum PATHSTATE {
-        ORIENT_LAUNCHER,
-        DRIVE_TOWARD_HIVE,
+        START_PATH,
         WAIT_DELAY,
         LAUNCH_POLLEN,
         TURN_TOWARD_WALL,
         DRIVE_TOWARD_WALL,
         TURN_TOWARD_PARK,
         DRIVE_TOWARD_PARK,
+        TURN_TOWARD_FIELD,
+        BACKUP_TO_WALL,
         FINISHED
     }
-    PATHSTATE pathState = PATHSTATE.ORIENT_LAUNCHER;
+    PATHSTATE pathState = PATHSTATE.START_PATH;
 
     @Override
     public void init() {
@@ -165,8 +158,6 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
         // Initialize the drive system variables.
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
@@ -174,25 +165,12 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
-        /*
-        leftFrontDrive.setZeroPowerBehavior(BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(BRAKE);
-        leftBackDrive.setZeroPowerBehavior(FLOAT);
-        leftBackDrive.setZeroPowerBehavior(FLOAT);
-        */
 
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         launcher = hardwareMap.get(DcMotorEx.class, "launcher");
         windmillServo = hardwareMap.get(CRServo.class, "windmillServo");
@@ -202,15 +180,12 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
         windmillServo.setPower(0);
         windmillServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        imu.init(hardwareMap);
-        imu.resetYaw();
+        intake.init(hardwareMap);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at", "%7d :%7d",
                 leftFrontDrive.getCurrentPosition(),
                 rightFrontDrive.getCurrentPosition());
-        telemetry.addData("Yaw = ",imu.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-
         telemetry.update();
     }
 
@@ -239,6 +214,18 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
                     initState = InitState.CONFIRM_SELECTIONS;
                 } else if (gamepad1.bWasPressed()) {
                     hivePosition = HIVE_POSITION.HIVE_POSITION_DOWN;
+                    initState = InitState.GET_WAIT_AND_LAUNCH;
+                }
+                break;
+            case GET_WAIT_AND_LAUNCH:
+                telemetry.addLine("Set wait & launch");
+                telemetry.addLine("Press A to wait & launch");
+                telemetry.addLine("Press B to skip wait & launch");
+                if (gamepad1.aWasPressed()){
+                    waitAndLaunch = true;
+                    initState = InitState.CONFIRM_SELECTIONS;
+                } else if (gamepad1.bWasPressed()) {
+                    waitAndLaunch = false;
                     initState = InitState.CONFIRM_SELECTIONS;
                 }
                 break;
@@ -246,6 +233,9 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
                 telemetry.clear();
                 telemetry.addData("Alliance = ",alliance);
                 telemetry.addData("Hive position = ",hivePosition);
+                if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN){
+                    telemetry.addData("Wait & Launch = ",waitAndLaunch);
+                }
                 telemetry.addLine("");
                 telemetry.addLine("Press Y to accept");
                 telemetry.addLine("Press X to restart");
@@ -266,7 +256,7 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
     public void start(){
 
         opmodeRuntime.reset();
-        launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
+//        launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
         if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
             waitTime = gameDelaySeconds;
         }
@@ -278,6 +268,7 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
 
 
         switch (pathState){
+/*
             case ORIENT_LAUNCHER:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
                     encoderDrive(TURN_SPEED, leftTurn90_left, leftTurn90_right, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
@@ -286,57 +277,90 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
                 }
                 pathState = PATHSTATE.WAIT_DELAY;
                 break;
- //           case DRIVE_TOWARD_HIVE:
- //               encoderDrive(DRIVE_SPEED, distanceToHive, distanceToHive, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
- //               pathState = PATHSTATE.WAIT_DELAY;
-//                break;
+ */
+            case START_PATH:     // Determine path start from init choices
+                if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
+                    launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
+                    pathState = PATHSTATE.LAUNCH_POLLEN;                // launch pollen if hive up
+                } else if (waitAndLaunch){                              // check wait & launch choice
+                    launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
+                    pathState = PATHSTATE.WAIT_DELAY;
+                } else {
+                    pathState = PATHSTATE.TURN_TOWARD_WALL;
+                }
+
+                break;
+
             case WAIT_DELAY:
                 if (opmodeRuntime.seconds() > waitTime) {
                     pathState = PATHSTATE.LAUNCH_POLLEN;
                 }
                 break;
+
             case LAUNCH_POLLEN:
                 launch();
                 pathState = PATHSTATE.TURN_TOWARD_WALL;
+                launcher.setVelocity(0);   // turn off launcher
                 break;
             case TURN_TOWARD_WALL:
-                if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
-                    encoderDrive(TURN_SPEED, leftTurn90_left, leftTurn90_right, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                intake.intake.setPower(-.5);          // turn intakes to reverse to try to push objects
+                intake.leftIntakeServo.setPower(-.5);
+                intake.rightIntakeServo.setPower(-.5);
+
+                if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
+                    encoderDrive(TURN_SPEED, 31, -31, 4.0);  // Turn Right with 4 Sec timeout
                 } else{
-                    encoderDrive(TURN_SPEED, rightTurn90_left, rightTurn90_right, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
+                    encoderDrive(TURN_SPEED,-32, 32, 4.0);  // Turn left with 4 Sec timeout
                 }
 
                 pathState = PATHSTATE.DRIVE_TOWARD_WALL;
                 break;
             case DRIVE_TOWARD_WALL:
-                encoderDrive(DRIVE_SPEED, distanceToWall, distanceToWall, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
+                encoderDrive(DRIVE_SPEED, distanceToWall, distanceToWall, 4.0);  // drive toward wall with 4 Sec timeout
                 pathState = PATHSTATE.TURN_TOWARD_PARK;
                 break;
             case TURN_TOWARD_PARK:
-                if (alliance == ALLIANCE.RED_ALLIANCE && hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
-                    encoderDrive(TURN_SPEED, leftTurn90_left, leftTurn90_right, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
+                    encoderDrive(TURN_SPEED, 32, -32, 4.0);  // Turn Right with 4 Sec timeout
                 } else{
-                    encoderDrive(TURN_SPEED, rightTurn90_left, rightTurn90_right, 2.0);  // S2: Turn Rleft 12 Inches with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, -30, 30, 4.0);  // Turn left with 4 Sec timeout
                 }
                 pathState = PATHSTATE.DRIVE_TOWARD_PARK;
                 break;
             case DRIVE_TOWARD_PARK:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
-                    encoderDrive(DRIVE_SPEED, distanceToParkUp, distanceToParkUp, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
+                    encoderDrive(DRIVE_SPEED, distanceToParkUp, distanceToParkUp, 5.0);  // S1: Forward with 5 Sec timeout
                 } else {
-                    encoderDrive(DRIVE_SPEED, distanceToParkDown, distanceToParkDown, 2.0);  // S1: Forward 6 Inches with 5 Sec timeout
+                    telemetry.addLine("drive ");
+                    displayData(distanceToParkDown,distanceToParkDown);
+                    encoderDrive(DRIVE_SPEED, distanceToParkDown, distanceToParkDown, 4.0);  // S1: Forward with 4 Sec timeout
                 }
+                pathState = PATHSTATE.TURN_TOWARD_FIELD;
+                break;
+            case TURN_TOWARD_FIELD:
+
+                if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
+                    encoderDrive(TURN_SPEED, 30, -30, 4.0);  // S2: Turn Right with 4 Sec timeout
+                } else{
+                    telemetry.addLine("turn ");
+                    displayData(-30,30);
+                    encoderDrive(TURN_SPEED, -30, 30, 4.0);  // S2: Turn left with 4 Sec timeout
+                }
+                intake.intake.setPower(0);          // turn off intakes
+                intake.leftIntakeServo.setPower(0);
+                intake.rightIntakeServo.setPower(0);
+                pathState = PATHSTATE.BACKUP_TO_WALL;
+                break;
+            case BACKUP_TO_WALL:
+                encoderDrive(DRIVE_SPEED, distanceToBackup, distanceToBackup, 3.0);  // S1: drive back with 3 Sec timeout
                 pathState = PATHSTATE.FINISHED;
                 break;
-            case FINISHED:
+             case FINISHED:
                 telemetry.addLine("path finished");
                 break;
             default: // final state
                 telemetry.addLine("path fail");
         }
-
-
-
     }
 
     public void encoderDrive(double speed,
@@ -393,12 +417,28 @@ public class AutoDriveByEncoder4Wheel extends OpMode {
             if (launcher.getVelocity() > LAUNCHER_MIN_VELOCITY) {
             windmillServo.setPower(1);
             //  intakePower += 0.5;
-            telemetry.addData("launcher ", launcher.getVelocity());
+        //   telemetry.addData("launcher ", launcher.getVelocity());
             }
         }
         windmillServo.setPower(0);
         launcher.setVelocity(0);
 
+
+    }
+
+    void displayData(double leftInches,double rightInches) {
+        int newLeftTarget;
+        int newRightTarget;
+
+
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = leftFrontDrive.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+        newRightTarget = rightFrontDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        // Display it for the driver.
+                telemetry.addData("Running to", " %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Currently at", " at %7d :%7d",
+                       leftFrontDrive.getCurrentPosition(), rightFrontDrive.getCurrentPosition());
+                telemetry.update();
 
     }
 

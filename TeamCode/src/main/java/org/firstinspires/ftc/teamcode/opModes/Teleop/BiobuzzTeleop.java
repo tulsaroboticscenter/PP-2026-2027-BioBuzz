@@ -33,6 +33,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Imu;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Launcher;
 import org.firstinspires.ftc.teamcode.Hardware.PinPoint;
+import org.firstinspires.ftc.teamcode.classes.Globals;
 
 /*
  * This teleop class was devived from the GoBilda starter example teleop, modified to be field centric
@@ -67,10 +68,19 @@ public class BiobuzzTeleop extends OpMode {
         intake.init(hardwareMap);
         launcher.init(hardwareMap);
 
+
+        fieldCentric = Globals.fieldCentric;
+
         /*
          * Tell the driver that initialization is complete.
          */
         telemetry.addData("Status", "Initialized");
+        if (fieldCentric) {
+            telemetry.addLine("Field Centric");
+        } else {
+            telemetry.addLine("Robot Centric");
+        }
+        telemetry.addLine(" ");
         telemetry.addLine("Press A to reset heading");
         telemetry.addLine("Press X to toggle field centric");
 

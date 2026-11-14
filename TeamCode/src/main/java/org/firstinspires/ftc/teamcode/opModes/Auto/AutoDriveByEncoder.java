@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.classes.Globals;
 
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -100,7 +101,8 @@ public class AutoDriveByEncoder extends OpMode {
     private double distanceToWall = 26;
     private double distanceToParkDown = 16;
     private double distanceToParkUp = 85;
-    private double distanceToBackup = -17;
+    private double distanceToBackupDown = -17;
+    private double distanceToBackupUp = -17;
 
 /*
     private double leftTurn90_left = -turn90;
@@ -118,6 +120,7 @@ public class AutoDriveByEncoder extends OpMode {
         GET_ALLIANCE,
         GET_HIVE_POSITION,
         GET_WAIT_AND_LAUNCH,
+        GET_DRIVING_CHOICE,
         CONFIRM_SELECTIONS,
         FINISHED
     }
@@ -137,6 +140,7 @@ public class AutoDriveByEncoder extends OpMode {
 
     HIVE_POSITION hivePosition = HIVE_POSITION.HIVE_POSITION_UP;
 
+    boolean fieldCentric = true;
     enum PATHSTATE {
         START_PATH,
         WAIT_DELAY,
@@ -222,9 +226,21 @@ public class AutoDriveByEncoder extends OpMode {
                 telemetry.addLine("Press B to skip wait & launch");
                 if (gamepad1.aWasPressed()){
                     waitAndLaunch = true;
-                    initState = InitState.CONFIRM_SELECTIONS;
+                    initState = InitState.GET_DRIVING_CHOICE;
                 } else if (gamepad1.bWasPressed()) {
                     waitAndLaunch = false;
+                    initState = InitState.GET_DRIVING_CHOICE;
+                }
+                break;
+            case GET_DRIVING_CHOICE:
+                telemetry.addLine("Set driving choice");
+                telemetry.addLine("Press A for field centric");
+                telemetry.addLine("Press B for robot centric");
+                if (gamepad1.aWasPressed()){
+                    fieldCentric = true;
+                    initState = InitState.CONFIRM_SELECTIONS;
+                } else if (gamepad1.bWasPressed()) {
+                    fieldCentric = false;
                     initState = InitState.CONFIRM_SELECTIONS;
                 }
                 break;
@@ -234,6 +250,11 @@ public class AutoDriveByEncoder extends OpMode {
                 telemetry.addData("Hive position = ",hivePosition);
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN){
                     telemetry.addData("Wait & Launch = ",waitAndLaunch);
+                }
+                if (fieldCentric){
+                    telemetry.addLine("Field Centric");
+                } else {
+                    telemetry.addLine("Robot Centric");
                 }
                 telemetry.addLine("");
                 telemetry.addLine("Press Y to accept");
@@ -256,6 +277,8 @@ public class AutoDriveByEncoder extends OpMode {
 
         opmodeRuntime.reset();
 //        launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
+        Globals.fieldCentric = fieldCentric;
+
         if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
             waitTime = gameDelaySeconds;
         }
@@ -351,7 +374,11 @@ public class AutoDriveByEncoder extends OpMode {
                 pathState = PATHSTATE.BACKUP_TO_WALL;
                 break;
             case BACKUP_TO_WALL:
-                encoderDrive(DRIVE_SPEED, distanceToBackup, distanceToBackup, 3.0);  // S1: drive back with 3 Sec timeout
+                if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
+                    encoderDrive(DRIVE_SPEED, distanceToBackupUp,distanceToBackupUp, 3.0);  // S1: drive back with 3 Sec timeout
+                } else {
+                    encoderDrive(DRIVE_SPEED, distanceToBackupDown,distanceToBackupDown, 3.0);  // S1: drive back with 3 Sec timeout
+                }
                 pathState = PATHSTATE.FINISHED;
                 break;
              case FINISHED:
