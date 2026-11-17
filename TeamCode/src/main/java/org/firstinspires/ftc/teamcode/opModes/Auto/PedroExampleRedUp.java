@@ -8,13 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
-import static com.pedropathing.api.Paths.*;
 
 import com.pedropathing.paths.Path;
-@Autonomous(name = "Pedro Example", group = "Test",preselectTeleOp = "BioBuzz Teleop")
+@Autonomous(name = "Pedro Example Red Up", group = "Test",preselectTeleOp = "BioBuzz Teleop")
 //@Disabled
 
-public class PedroExample extends OpMode {
+public class PedroExampleRedUp extends OpMode {
     private Follower follower;
     private final PoseFactory pf = PoseFactory.degrees();
     // our poses
