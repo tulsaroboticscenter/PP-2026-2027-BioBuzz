@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.Hardware.PinPoint;
 import org.firstinspires.ftc.teamcode.goBilda.GoBildaPinpointDriver;
 
-@Disabled
+//@Disabled
 @TeleOp(name = "Pinpoint test")
 public class PinPointTest extends OpMode {
     private PinPoint pinPoint = new PinPoint();

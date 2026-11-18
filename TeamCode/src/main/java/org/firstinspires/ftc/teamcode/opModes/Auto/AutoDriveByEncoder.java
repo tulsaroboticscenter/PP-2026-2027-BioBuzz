@@ -102,7 +102,7 @@ public class AutoDriveByEncoder extends OpMode {
     private double distanceToParkDown = 16;
     private double distanceToParkUp = 85;
     private double distanceToBackupDown = -17;
-    private double distanceToBackupUp = -17;
+    private double distanceToBackupUp = -15;
 
 /*
     private double leftTurn90_left = -turn90;
@@ -234,12 +234,12 @@ public class AutoDriveByEncoder extends OpMode {
                 break;
             case GET_DRIVING_CHOICE:
                 telemetry.addLine("Set driving choice");
-                telemetry.addLine("Press A for field centric");
-                telemetry.addLine("Press B for robot centric");
-                if (gamepad1.aWasPressed()){
+                telemetry.addLine("Press X for field centric");
+                telemetry.addLine("Press Y for robot centric");
+                if (gamepad1.xWasPressed()){
                     fieldCentric = true;
                     initState = InitState.CONFIRM_SELECTIONS;
-                } else if (gamepad1.bWasPressed()) {
+                } else if (gamepad1.yWasPressed()) {
                     fieldCentric = false;
                     initState = InitState.CONFIRM_SELECTIONS;
                 }
@@ -343,7 +343,7 @@ public class AutoDriveByEncoder extends OpMode {
                 break;
             case TURN_TOWARD_PARK:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
-                    encoderDrive(TURN_SPEED, 32, -32, 4.0);  // Turn Right with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, 30, -30, 4.0);  // Turn Right with 4 Sec timeout
                 } else{
                     encoderDrive(TURN_SPEED, -30, 30, 4.0);  // Turn left with 4 Sec timeout
                 }
@@ -362,7 +362,7 @@ public class AutoDriveByEncoder extends OpMode {
             case TURN_TOWARD_FIELD:
 
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
-                    encoderDrive(TURN_SPEED, 30, -30, 4.0);  // S2: Turn Right with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, 32, -32, 4.0);  // S2: Turn Right with 4 Sec timeout
                 } else{
                     telemetry.addLine("turn ");
                     displayData(-30,30);
