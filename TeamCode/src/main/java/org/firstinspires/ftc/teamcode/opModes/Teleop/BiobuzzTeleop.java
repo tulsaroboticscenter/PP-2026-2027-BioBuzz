@@ -69,7 +69,7 @@ public class BiobuzzTeleop extends OpMode {
         launcher.init(hardwareMap);
 
 
-        fieldCentric = Globals.fieldCentric;
+        fieldCentric = true;
 
         /*
          * Tell the driver that initialization is complete.

@@ -120,7 +120,6 @@ public class AutoDriveByEncoder extends OpMode {
         GET_ALLIANCE,
         GET_HIVE_POSITION,
         GET_WAIT_AND_LAUNCH,
-        GET_DRIVING_CHOICE,
         CONFIRM_SELECTIONS,
         FINISHED
     }
@@ -140,7 +139,6 @@ public class AutoDriveByEncoder extends OpMode {
 
     HIVE_POSITION hivePosition = HIVE_POSITION.HIVE_POSITION_UP;
 
-    boolean fieldCentric = true;
     enum PATHSTATE {
         START_PATH,
         WAIT_DELAY,
@@ -226,21 +224,9 @@ public class AutoDriveByEncoder extends OpMode {
                 telemetry.addLine("Press B to skip wait & launch");
                 if (gamepad1.aWasPressed()){
                     waitAndLaunch = true;
-                    initState = InitState.GET_DRIVING_CHOICE;
+                    initState = InitState.CONFIRM_SELECTIONS;
                 } else if (gamepad1.bWasPressed()) {
                     waitAndLaunch = false;
-                    initState = InitState.GET_DRIVING_CHOICE;
-                }
-                break;
-            case GET_DRIVING_CHOICE:
-                telemetry.addLine("Set driving choice");
-                telemetry.addLine("Press X for field centric");
-                telemetry.addLine("Press Y for robot centric");
-                if (gamepad1.xWasPressed()){
-                    fieldCentric = true;
-                    initState = InitState.CONFIRM_SELECTIONS;
-                } else if (gamepad1.yWasPressed()) {
-                    fieldCentric = false;
                     initState = InitState.CONFIRM_SELECTIONS;
                 }
                 break;
@@ -250,11 +236,6 @@ public class AutoDriveByEncoder extends OpMode {
                 telemetry.addData("Hive position = ",hivePosition);
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN){
                     telemetry.addData("Wait & Launch = ",waitAndLaunch);
-                }
-                if (fieldCentric){
-                    telemetry.addLine("Field Centric");
-                } else {
-                    telemetry.addLine("Robot Centric");
                 }
                 telemetry.addLine("");
                 telemetry.addLine("Press Y to accept");
@@ -277,7 +258,6 @@ public class AutoDriveByEncoder extends OpMode {
 
         opmodeRuntime.reset();
 //        launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
-        Globals.fieldCentric = fieldCentric;
 
         if (hivePosition == HIVE_POSITION.HIVE_POSITION_DOWN) {
             waitTime = gameDelaySeconds;
