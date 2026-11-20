@@ -10,16 +10,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
-@Autonomous(name = "Pedro Example Blue Up", group = "Test",preselectTeleOp = "BioBuzz Teleop")
+@Autonomous(name = "Pedro Blue Down", group = "Auto",preselectTeleOp = "BioBuzz Teleop")
 //@Disabled
 
-public class PedroExampleBlueUp extends OpMode {
+public class PedroBlueDown extends OpMode {
     private Follower follower;
     private final PoseFactory pf = PoseFactory.degrees();
     // our poses
-    private final Pose startPose = pf.of(86.0604, 135.0231, 90);
-    private final Pose park = pf.of(127.1561, 44.7795, 180);
-    private final Pose parkCtl = pf.of(128.4791, 97.9373, 0);
+    private final Pose startPose = pf.of(79.3991, 8.3685, 270);
+    private final Pose park = pf.of(130.9876, 28.446, 180);
+    private final Pose parkCtl = pf.of(105.5943, 32.547, 0);
 
     public Path path1() {
         return Paths.curve(startPose, parkCtl, park).linear(startPose, park);
