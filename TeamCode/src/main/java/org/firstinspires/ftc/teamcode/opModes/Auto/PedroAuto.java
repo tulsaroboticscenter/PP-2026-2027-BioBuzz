@@ -22,21 +22,13 @@ public class PedroAuto extends OpMode {
 
     private final PoseFactory pf = PoseFactory.degrees();
     // our poses
-    private final Pose startPoseRedUp = pf.of(55.4396, 8.1868, 270);
-    private final Pose parkRedUp = pf.of(10.0475, 100.6324, 180);
-    private final Pose parkCtlRedUp = pf.of(13.4028, 32.2695, 0);
+    private final Pose startPoseUp = pf.of(55.4396, 8.1868, 270);
+    private final Pose parkUp = pf.of(10.0475, 100.6324, 180);
+    private final Pose parkCtlUp = pf.of(13.4028, 32.2695, 0);
 
-    private final Pose startPoseRedDown = pf.of(62.2643, 132.5495, 90);
-    private final Pose parkRedDown = pf.of(10.6758, 111.9089, 0);
-    private final Pose parkCtlRedDown = pf.of(49.4284, 108.5131, 0);
-
-    private final Pose startPoseBlueUp = pf.of(79.2433, 133.1807, 90);
-    private final Pose parkBlueUp = pf.of(127.1561, 44.7795, 180);
-    private final Pose parkCtlBlueUp = pf.of(128.4791, 97.9373, 0);
-
-    private final Pose startPoseBlueDown = pf.of(79.3991, 8.3685, 270);
-    private final Pose parkBlueDown = pf.of(130.9876, 28.446, 180);
-    private final Pose parkCtlBlueDown = pf.of(105.5943, 32.547, 0);
+    private final Pose startPoseDown = pf.of(79.3991, 8.3685, 270);
+    private final Pose parkDown = pf.of(130.9876, 28.446, 180);
+    private final Pose parkCtlDown = pf.of(105.5943, 32.547, 0);
 
     double intakePower;
 
@@ -73,7 +65,7 @@ public class PedroAuto extends OpMode {
     PATHSTATE pathState = PATHSTATE.START_PATH;
 
     private Follower follower;
-    private int gameDelaySeconds = 5;
+    private int gameDelaySeconds =15;
     private double launchDelay = 5; // time allowed for launch
     private int waitTime = 0;
     private boolean waitAndLaunch = true;
@@ -81,20 +73,12 @@ public class PedroAuto extends OpMode {
     private ElapsedTime opmodeRuntime = new ElapsedTime();
     private ElapsedTime launcherTime = new ElapsedTime();
 
-    public Path path1RedUp() {
-        return Paths.curve(startPoseRedUp, parkCtlRedUp, parkRedUp).linear(startPoseRedUp, parkRedUp);
+    public Path path1Up() {
+        return Paths.curve(startPoseUp, parkCtlUp, parkUp).linear(startPoseUp, parkUp);
     }
 
-    public Path path1RedDown() {
-        return Paths.curve(startPoseRedDown, parkCtlRedDown, parkRedDown).linear(startPoseRedDown, parkRedDown);
-    }
-
-    public Path path1BlueUp() {
-        return Paths.curve(startPoseBlueUp, parkCtlBlueUp, parkBlueUp).linear(startPoseBlueUp, parkBlueUp);
-    }
-
-    public Path path1BlueDown() {
-        return Paths.curve(startPoseBlueDown, parkCtlBlueDown, parkBlueDown).linear(startPoseBlueDown, parkBlueDown);
+    public Path path1Down() {
+        return Paths.curve(startPoseDown, parkCtlDown, parkDown).linear(startPoseDown, parkDown);
     }
 
     public void init() {
@@ -160,19 +144,11 @@ public class PedroAuto extends OpMode {
                 }
                 break;
             case SET_START_POSE:
-                if (alliance == ALLIANCE.RED_ALLIANCE) {
                    if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP){
-                      follower.setPose(startPoseRedUp);
+                      follower.setPose(startPoseUp);
                    } else {
-                       follower.setPose(startPoseRedDown);
+                       follower.setPose(startPoseDown);
                    }
-                }  else {
-                    if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP){
-                        follower.setPose(startPoseBlueUp);
-                    } else {
-                        follower.setPose(startPoseBlueDown);
-                    }
-                }
                 initState = InitState.FINISHED;
                 break;
             default: // final state
@@ -215,19 +191,11 @@ public class PedroAuto extends OpMode {
                 launcher.launcher.setVelocity(0);   // turn off launcher
                 break;
             case FOLLOW_PATH:
-                if (alliance == ALLIANCE.RED_ALLIANCE) {
                     if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP){
-                        follower.follow(path1RedUp());
+                        follower.follow(path1Up());
                     } else {
-                        follower.follow(path1RedDown());
+                        follower.follow(path1Down());
                     }
-                }  else {
-                    if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP){
-                        follower.follow(path1BlueUp());
-                    } else {
-                        follower.follow(path1BlueDown());
-                    }
-                }
 
                 while (follower.following()) {
                     follower.update();
@@ -240,8 +208,6 @@ public class PedroAuto extends OpMode {
                 telemetry.addLine("path fail");
 
         }
-
-
     }
 
     void launch() {
