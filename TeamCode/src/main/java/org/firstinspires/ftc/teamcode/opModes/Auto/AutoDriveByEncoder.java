@@ -94,15 +94,15 @@ public class AutoDriveByEncoder extends OpMode {
     public final int LAUNCHER_TARGET_VELOCITY = 1350; //2678 RPM
     public final int LAUNCHER_MIN_VELOCITY = 1300; //2571 RPM
 
-    private int gameDelaySeconds = 5;
+    private int gameDelaySeconds = 15;
     private double launchDelay = 5; // time allowed for launch
  //   private double turn90 = 28;
 
     private double distanceToWall = 26;
     private double distanceToParkDown = 16;
     private double distanceToParkUp = 85;
-    private double distanceToBackupDown = -17;
-    private double distanceToBackupUp = -15;
+    private double distanceToBackupDown = -16;
+    private double distanceToBackupUp = -13;
 
 /*
     private double leftTurn90_left = -turn90;
@@ -323,7 +323,7 @@ public class AutoDriveByEncoder extends OpMode {
                 break;
             case TURN_TOWARD_PARK:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
-                    encoderDrive(TURN_SPEED, 30, -30, 4.0);  // Turn Right with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, 32, -32, 4.0);  // Turn Right with 4 Sec timeout
                 } else{
                     encoderDrive(TURN_SPEED, -30, 30, 4.0);  // Turn left with 4 Sec timeout
                 }
