@@ -325,7 +325,7 @@ public class AutoDriveByEncoder extends OpMode {
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
                     encoderDrive(TURN_SPEED, 32, -32, 4.0);  // Turn Right with 4 Sec timeout
                 } else{
-                    encoderDrive(TURN_SPEED, -30, 30, 4.0);  // Turn left with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, -32, 32, 4.0);  // Turn left with 4 Sec timeout
                 }
                 pathState = PATHSTATE.DRIVE_TOWARD_PARK;
                 break;
