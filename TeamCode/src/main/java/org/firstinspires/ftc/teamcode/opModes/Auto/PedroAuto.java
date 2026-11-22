@@ -27,7 +27,7 @@ public class PedroAuto extends OpMode {
     private final Pose parkCtlUp = pf.of(13.4028, 32.2695, 0);
 
     private final Pose startPoseDown = pf.of(79.3991, 8.3685, 270);
-    private final Pose parkDown = pf.of(130.9876, 28.446, 180);
+    private final Pose parkDown = pf.of(131.1719, 26.972, 180);
     private final Pose parkCtlDown = pf.of(105.5943, 32.547, 0);
 
     double intakePower;
