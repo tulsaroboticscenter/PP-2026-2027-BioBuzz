@@ -130,12 +130,12 @@ public class PIDFtuner extends OpMode {
             fieldCentric = !fieldCentric;
         }
 
-        if (gamepad1.bWasPressed()) {
+        if (gamepad1.yWasPressed()) {
             test_min_velocity = test_min_velocity + 28;
             test_target_velocity= test_target_velocity + 28;
         }
 
-        if (gamepad1.yWasPressed()) {
+        if (gamepad1.bWasPressed()) {
             test_min_velocity = test_min_velocity -28;
             test_target_velocity= test_target_velocity -28;
         }
@@ -164,15 +164,7 @@ public class PIDFtuner extends OpMode {
                     pidf.p, pidf.f);
         }
 
-        if (gamepad1.dpadLeftWasPressed()){        if (gamepad1.dpadRightWasPressed()){
-            PID_P = PID_P + P_Increment;
-            launcher.launcher.setPIDFCoefficients(launcher.launcher.getMode(),pidf);
-            PIDFCoefficients pidf = launcher.launcher.getPIDFCoefficients(launcher.launcher.getMode().RUN_USING_ENCODER);
-            telemetry.addData("P,F (changed)", "%.0f, %.04f",
-                    pidf.p, pidf.f);
-        }
-
-
+        if (gamepad1.dpadLeftWasPressed()){
             PID_P = PID_P - P_Increment;
             launcher.launcher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidf);
             PIDFCoefficients pidf = launcher.launcher.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
