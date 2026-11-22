@@ -102,7 +102,7 @@ public class AutoDriveByEncoder extends OpMode {
     private double distanceToParkDown = 16;
     private double distanceToParkUp = 85;
     private double distanceToBackupDown = -16;
-    private double distanceToBackupUp = -13;
+    private double distanceToBackupUp = -15;
 
 /*
     private double leftTurn90_left = -turn90;
@@ -323,7 +323,7 @@ public class AutoDriveByEncoder extends OpMode {
                 break;
             case TURN_TOWARD_PARK:
                 if (hivePosition == HIVE_POSITION.HIVE_POSITION_UP) {
-                    encoderDrive(TURN_SPEED, 32, -32, 4.0);  // Turn Right with 4 Sec timeout
+                    encoderDrive(TURN_SPEED, 30, -30, 4.0);  // Turn Right with 4 Sec timeout
                 } else{
                     encoderDrive(TURN_SPEED, -32, 32, 4.0);  // Turn left with 4 Sec timeout
                 }
