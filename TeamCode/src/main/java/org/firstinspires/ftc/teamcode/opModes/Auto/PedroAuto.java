@@ -65,7 +65,7 @@ public class PedroAuto extends OpMode {
     PATHSTATE pathState = PATHSTATE.START_PATH;
 
     private Follower follower;
-    private int gameDelaySeconds =15;
+    private int gameDelaySeconds = 15;
     private double launchDelay = 5; // time allowed for launch
     private int waitTime = 0;
     private boolean waitAndLaunch = true;
@@ -200,6 +200,7 @@ public class PedroAuto extends OpMode {
                 while (follower.following()) {
                     follower.update();
                 }
+                pathState = PATHSTATE.FINISHED;
                 break;
             case FINISHED:
                 telemetry.addLine("path finished");
