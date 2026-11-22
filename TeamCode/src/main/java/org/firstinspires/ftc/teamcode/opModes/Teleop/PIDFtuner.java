@@ -67,7 +67,8 @@ public class PIDFtuner extends OpMode {
     PIDFCoefficients pidf = new PIDFCoefficients(PID_P,PID_I,PID_D,PID_F);
     double P_Increment = 0.5;
     double F_Increment = 0.05;
-
+    double test_min_velocity = 1204;  //2580 rpm
+    double test_target_velocity = 1260; // 2700 rpm
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -124,10 +125,19 @@ public class PIDFtuner extends OpMode {
             pinpoint.pinPoint.resetPosAndIMU();
         }
 
-
         // if button X, toggle field centric
         if (gamepad1.xWasPressed()){
             fieldCentric = !fieldCentric;
+        }
+
+        if (gamepad1.bWasPressed()) {
+            test_min_velocity = test_min_velocity + 28;
+            test_target_velocity= test_target_velocity + 28;
+        }
+
+        if (gamepad1.yWasPressed()) {
+            test_min_velocity = test_min_velocity -28;
+            test_target_velocity= test_target_velocity -28;
         }
 
         if (gamepad1.dpadUpWasPressed()){
@@ -154,7 +164,15 @@ public class PIDFtuner extends OpMode {
                     pidf.p, pidf.f);
         }
 
-        if (gamepad1.dpadLeftWasPressed()){
+        if (gamepad1.dpadLeftWasPressed()){        if (gamepad1.dpadRightWasPressed()){
+            PID_P = PID_P + P_Increment;
+            launcher.launcher.setPIDFCoefficients(launcher.launcher.getMode(),pidf);
+            PIDFCoefficients pidf = launcher.launcher.getPIDFCoefficients(launcher.launcher.getMode().RUN_USING_ENCODER);
+            telemetry.addData("P,F (changed)", "%.0f, %.04f",
+                    pidf.p, pidf.f);
+        }
+
+
             PID_P = PID_P - P_Increment;
             launcher.launcher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidf);
             PIDFCoefficients pidf = launcher.launcher.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -221,7 +239,7 @@ public class PIDFtuner extends OpMode {
          * Otherwise, we start spinning the launcher down.
          */
         if (gamepad1.right_bumper) {
-            launcher.launcher.setVelocity(launcher.LAUNCHER_TARGET_VELOCITY);
+            launcher.launcher.setVelocity(test_target_velocity);
         } else {
             launcher.launcher.setVelocity(0);
         }
@@ -233,11 +251,12 @@ public class PIDFtuner extends OpMode {
          * add some power to the intake power. This can sometimes help dislodge stuck elements from
          * inside the hopper.
          */
-        if (gamepad1.right_bumper && launcher.launcher.getVelocity() > launcher.LAUNCHER_MIN_VELOCITY) {
+        if (gamepad1.right_bumper && launcher.launcher.getVelocity() > test_min_velocity) {
             launcher.windmillServo.setPower(1);
             intakePower += 0.5;
-            telemetry.addData("Velocity ",launcher.launcher.getVelocity());
-            telemetry.addData("P,F (current)", "%.0f, %.04f",
+            telemetry.addData("Target","%.4f",test_target_velocity);
+            telemetry.addData("Velocity ","%.4f",launcher.launcher.getVelocity());
+            telemetry.addData("P,F (current)", "%.04f, %.04f",
                     pidf.p, pidf.f);
 
         } else {
