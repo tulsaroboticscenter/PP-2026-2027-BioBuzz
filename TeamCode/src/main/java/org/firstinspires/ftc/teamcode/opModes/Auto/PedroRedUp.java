@@ -5,6 +5,7 @@ import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
@@ -15,7 +16,7 @@ import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "Pedro Red Up", group = "Auto",preselectTeleOp = "BioBuzz Teleop")
-//@Disabled
+@Disabled
 
 public class PedroRedUp extends OpMode {
     private Follower follower;

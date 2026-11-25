@@ -67,8 +67,9 @@ public class PIDFtuner extends OpMode {
     PIDFCoefficients pidf = new PIDFCoefficients(PID_P,PID_I,PID_D,PID_F);
     double P_Increment = 0.5;
     double F_Increment = 0.05;
-    double test_min_velocity = 1204;  //2580 rpm
-    double test_target_velocity = 1260; // 2700 rpm
+    double test_min_velocity = 1300;  //2580 rpm
+    double test_max_velocity = 1340;  //2580 rpm
+    double test_target_velocity = 1320; // 2700 rpm
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -82,7 +83,7 @@ public class PIDFtuner extends OpMode {
         fieldCentric = true;
 
         PIDFCoefficients pidOrig = launcher.launcher.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-        PID_P = pidOrig.p;
+        PID_P = pidOrig.p; // set new pidf values
         PID_F = pidOrig.f;
 
         /*
@@ -131,19 +132,19 @@ public class PIDFtuner extends OpMode {
         }
 
         if (gamepad1.yWasPressed()) {
-            test_min_velocity = test_min_velocity + 28;
-            test_target_velocity= test_target_velocity + 28;
+            test_min_velocity = test_min_velocity + 5;
+            test_target_velocity= test_target_velocity + 5;
         }
 
         if (gamepad1.bWasPressed()) {
-            test_min_velocity = test_min_velocity -28;
-            test_target_velocity= test_target_velocity -28;
+            test_min_velocity = test_min_velocity -5;
+            test_target_velocity= test_target_velocity -5;
         }
 
         if (gamepad1.dpadUpWasPressed()){
             PID_F = PID_F + F_Increment;
             launcher.launcher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidf);
-            PIDFCoefficients pidf = launcher.launcher.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+            pidf = launcher.launcher.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
             telemetry.addData("P,F (changed)", "%.0f, %.04f",
                     pidf.p, pidf.f);
         }
@@ -151,7 +152,7 @@ public class PIDFtuner extends OpMode {
         if (gamepad1.dpadDownWasPressed()){
             PID_F = PID_F - F_Increment;
             launcher.launcher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidf);
-            PIDFCoefficients pidf = launcher.launcher.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+            pidf = launcher.launcher.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
             telemetry.addData("P,F (changed)", "%.0f, %.04f",
                     pidf.p, pidf.f);
         }
@@ -159,7 +160,7 @@ public class PIDFtuner extends OpMode {
         if (gamepad1.dpadRightWasPressed()){
             PID_P = PID_P + P_Increment;
             launcher.launcher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidf);
-            PIDFCoefficients pidf = launcher.launcher.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+            pidf = launcher.launcher.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
             telemetry.addData("P,F (changed)", "%.0f, %.04f",
                     pidf.p, pidf.f);
         }
@@ -167,7 +168,7 @@ public class PIDFtuner extends OpMode {
         if (gamepad1.dpadLeftWasPressed()){
             PID_P = PID_P - P_Increment;
             launcher.launcher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,pidf);
-            PIDFCoefficients pidf = launcher.launcher.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+            pidf = launcher.launcher.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
             telemetry.addData("P,F (changed)", "%.0f, %.04f",
                     pidf.p, pidf.f);
         }
@@ -243,11 +244,12 @@ public class PIDFtuner extends OpMode {
          * add some power to the intake power. This can sometimes help dislodge stuck elements from
          * inside the hopper.
          */
-        if (gamepad1.right_bumper && launcher.launcher.getVelocity() > test_min_velocity) {
+        double velocity = launcher.launcher.getVelocity();
+        if (gamepad1.right_bumper  && velocity > test_min_velocity  && velocity <= test_max_velocity ) {
             launcher.windmillServo.setPower(1);
             intakePower += 0.5;
             telemetry.addData("Target","%.4f",test_target_velocity);
-            telemetry.addData("Velocity ","%.4f",launcher.launcher.getVelocity());
+            telemetry.addData("Velocity ","%.4f",velocity);
             telemetry.addData("P,F (current)", "%.04f, %.04f",
                     pidf.p, pidf.f);
 

@@ -6,12 +6,13 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous(name = "Pedro Blue Down", group = "Auto",preselectTeleOp = "BioBuzz Teleop")
-//@Disabled
+@Disabled
 
 public class PedroBlueDown extends OpMode {
     private Follower follower;

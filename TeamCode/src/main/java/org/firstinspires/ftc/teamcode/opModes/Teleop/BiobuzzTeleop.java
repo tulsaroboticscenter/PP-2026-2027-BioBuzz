@@ -159,10 +159,13 @@ public class BiobuzzTeleop extends OpMode {
         /*
          * Show motor powers on the Driver Station via telemetry.
          */
+        /*
         telemetry.addData("field centric ",fieldCentric);
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", driveTrain.leftFrontPower, driveTrain.rightFrontPower);
         telemetry.addData("Triggers", "left (%.2f, right (%.2f)",gamepad1.left_trigger, gamepad1.right_trigger);
         telemetry.addData("Velocity ",launcher.launcher.getVelocity());
+
+         */
     }
     void launch() {
         /*
@@ -186,9 +189,12 @@ public class BiobuzzTeleop extends OpMode {
          * add some power to the intake power. This can sometimes help dislodge stuck elements from
          * inside the hopper.
          */
-        if (gamepad1.right_bumper && launcher.launcher.getVelocity() > launcher.LAUNCHER_MIN_VELOCITY) {
+        double velocity = launcher.launcher.getVelocity();
+        if (gamepad1.right_bumper && velocity > launcher.launcher_min_velocity && velocity <= launcher.launcher_max_velocity) {
             launcher.windmillServo.setPower(1);
             intakePower += 0.5;
+            telemetry.addData("Velocity ", velocity);
+
         } else {
             launcher.windmillServo.setPower(0);
         }

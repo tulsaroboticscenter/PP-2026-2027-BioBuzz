@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -15,6 +13,10 @@ public class Launcher {
 
     public final int LAUNCHER_TARGET_VELOCITY = 1350; //2678 RPM
     public final int LAUNCHER_MIN_VELOCITY = 1300; //2571 RPM
+
+    public int launcher_target_velocity = 1320; //2678 RPM
+    public int launcher_min_velocity = 1300; //2571 RPM
+    public int launcher_max_velocity = 1340; //2571 RPM
 
     public void init(HardwareMap hwMap) {
         launcher = hwMap.get(DcMotorEx.class, "launcher");
