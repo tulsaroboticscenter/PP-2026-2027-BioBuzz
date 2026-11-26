@@ -117,6 +117,19 @@ public class BiobuzzTeleop extends OpMode {
         if (gamepad1.xWasPressed()){
             fieldCentric = !fieldCentric;
         }
+
+        if (gamepad1.dpadUpWasPressed()) {
+            launcher.launcher_min_velocity = launcher.launcher_min_velocity + 5;
+            launcher.launcher_max_velocity = launcher.launcher_max_velocity + 5;
+            launcher.launcher_target_velocity= launcher.launcher_target_velocity + 5;
+        }
+
+        if (gamepad1.dpadDownWasPressed()) {
+            launcher.launcher_min_velocity = launcher.launcher_min_velocity - 5;
+            launcher.launcher_max_velocity = launcher.launcher_max_velocity - 5;
+            launcher.launcher_target_velocity = launcher.launcher_target_velocity - 5;
+        }
+
         pinpoint.pinPoint.update();
         if (fieldCentric){
             // field centric
