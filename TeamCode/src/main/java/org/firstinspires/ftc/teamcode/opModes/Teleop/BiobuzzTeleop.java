@@ -206,6 +206,7 @@ public class BiobuzzTeleop extends OpMode {
         if (gamepad1.right_bumper && velocity > launcher.launcher_min_velocity && velocity <= launcher.launcher_max_velocity) {
             launcher.windmillServo.setPower(1);
             intakePower += 0.5;
+            telemetry.addData("Target ",launcher.launcher_target_velocity);
             telemetry.addData("Velocity ", velocity);
 
         } else {
