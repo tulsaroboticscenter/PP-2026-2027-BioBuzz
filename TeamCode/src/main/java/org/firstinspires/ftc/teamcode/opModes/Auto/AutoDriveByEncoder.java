@@ -91,8 +91,8 @@ public class AutoDriveByEncoder extends OpMode {
     private CRServo windmillServo = null;
     private Intake intake = new Intake();
 
-    public final int LAUNCHER_TARGET_VELOCITY = 1350; //2678 RPM
-    public final int LAUNCHER_MIN_VELOCITY = 1300; //2571 RPM
+    public final int LAUNCHER_TARGET_VELOCITY = 1305; //2678 RPM
+    public final int LAUNCHER_MIN_VELOCITY = 1285; //2571 RPM
 
     private int gameDelaySeconds = 15;
     private double launchDelay = 5; // time allowed for launch

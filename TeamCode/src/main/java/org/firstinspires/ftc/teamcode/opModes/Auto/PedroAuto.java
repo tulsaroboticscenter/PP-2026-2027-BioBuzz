@@ -23,7 +23,7 @@ public class PedroAuto extends OpMode {
     private final PoseFactory pf = PoseFactory.degrees();
     // our poses
     private final Pose startPoseUp = pf.of(55.4396, 8.1868, 270);
-    private final Pose parkUp = pf.of(10.0475, 86.6324, 0);
+    private final Pose parkUp = pf.of(6.0475, 86.6324, 0);
     private final Pose parkCtlUp = pf.of(13.4028, 32.2695, 0);
 
     private final Pose startPoseDown = pf.of(79.3991, 8.3685, 270);
